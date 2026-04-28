@@ -1,4 +1,4 @@
-import { StrictMode } from "react";
+import { StrictMode, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import "./styles/reset.css";
 import "./styles/index.css";
@@ -28,6 +28,7 @@ declare module "@tanstack/react-router" {
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
+      staleTime: 30 * 1000,
       retry: (failureCount, error) => {
         if (
           error instanceof ApiError &&
@@ -43,7 +44,15 @@ const queryClient = new QueryClient({
 });
 
 export function App() {
-  const { data: session } = authClient.useSession();
+  const { data: session, isPending } = authClient.useSession();
+  const userId = session?.user.id ?? null;
+
+  useEffect(() => {
+    router.invalidate();
+  }, [userId]);
+
+  if (isPending && session === undefined) return <p>Loading...</p>;
+
   return (
     <RouterProvider router={router} context={{ session: session ?? null }} />
   );

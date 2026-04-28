@@ -31,3 +31,9 @@
 .addButton {
   max-width: 200px;
 }
+
+.emptyState {
+  text-align: center;
+  color: var(--color-neutral-400);
+  padding: var(--spacing-lg);
+}

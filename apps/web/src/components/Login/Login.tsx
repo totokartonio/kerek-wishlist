@@ -8,7 +8,7 @@ import Card from "../ui/Card";
 
 type MessageType = "error" | "success" | "info";
 
-type Message = {
+export type Message = {
   type: MessageType;
   text: string;
 } | null;
@@ -145,6 +145,7 @@ const Login = () => {
             email={formData.email}
             password={formData.password}
             fieldErrors={fieldErrors}
+            message={message}
             onSubmit={handleSubmit}
             onChange={handleChange}
             onBlur={handleBlur}
@@ -156,13 +157,13 @@ const Login = () => {
             password={formData.password}
             name={formData.name}
             fieldErrors={fieldErrors}
+            message={message}
             onSubmit={handleSubmit}
             onChange={handleChange}
             onBlur={handleBlur}
             onChangeMode={hanldeChangeMode}
           />
         )}
-        {message && <div className={styles[message.type]}>{message.text}</div>}
       </Card>
     </div>
   );

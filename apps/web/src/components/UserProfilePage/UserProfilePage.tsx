@@ -5,6 +5,10 @@ import { useSession } from "../../lib/auth-client";
 import { useEffect } from "react";
 import styles from "./UserProfilePage.module.css";
 import WishlistsGrid from "../WishlistsGrid";
+import { WishlistGridSkeleton } from "../WishlistsGrid/WishlistGridSkeleton";
+import ErrorMessage from "../ui/ErrorMessage";
+import { LinkButton } from "../ui/Button/LinkButton";
+import Skeleton from "../ui/Skeleton";
 
 type Props = {
   userId: string;
@@ -21,16 +25,53 @@ const UserProfilePage = ({ userId }: Props) => {
     if (user && user.id === session?.user.id) navigate({ to: "/dashboard" });
   }, [user, session, navigate]);
 
-  if (isLoading) return <p>Loading...</p>;
-  if (isError) return <p>Something went wrong.</p>;
-  if (!user) return <p>User doesn't exist</p>;
+  if (isLoading)
+    return (
+      <div className={styles.wrapper}>
+        <Skeleton width={200} height={32} />
+        <section className={styles.section}>
+          <h2>Wishlists</h2>
+
+          <WishlistGridSkeleton />
+        </section>
+      </div>
+    );
+
+  if (isError)
+    return (
+      <div className={styles.wrapper}>
+        <ErrorMessage
+          title="Something went wrong"
+          message="Can't load this user now. Try again later."
+          action={
+            <LinkButton variant="ghost" color="primary" to="/dashboard">
+              Go Back
+            </LinkButton>
+          }
+        />
+      </div>
+    );
+  if (!user)
+    return (
+      <div className={styles.wrapper}>
+        <ErrorMessage
+          title="Something went wrong"
+          message="User doesn't exist."
+          action={
+            <LinkButton variant="ghost" color="primary" to="/dashboard">
+              Go Back
+            </LinkButton>
+          }
+        />
+      </div>
+    );
 
   return (
     <div className={styles.wrapper}>
       <h1>{user.name}</h1>
       <section className={styles.section}>
         <h2>Wishlists</h2>
-        {wishlists ? (
+        {wishlists && wishlists.length > 0 ? (
           <WishlistsGrid
             color="primary"
             wishlists={wishlists.map((w) => ({
@@ -39,7 +80,7 @@ const UserProfilePage = ({ userId }: Props) => {
             }))}
           />
         ) : (
-          "No wishlists found"
+          <p className={styles.emptyState}>No wishlists found.</p>
         )}
       </section>
     </div>

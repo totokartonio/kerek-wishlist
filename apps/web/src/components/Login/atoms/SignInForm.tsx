@@ -4,6 +4,7 @@ import { Button } from "../../../components/ui/Button/Button";
 import styles from "../Login.module.css";
 import { EyeIcon } from "@phosphor-icons/react/dist/csr/Eye";
 import { EyeSlashIcon } from "@phosphor-icons/react/dist/csr/EyeSlash";
+import type { Message } from "../Login";
 
 type Props = {
   email: string;
@@ -12,6 +13,7 @@ type Props = {
     email: string;
     password: string;
   };
+  message: Message;
   onSubmit: (event: React.SubmitEvent<HTMLFormElement>) => void;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur: (event: React.FocusEvent<HTMLInputElement>) => void;
@@ -22,6 +24,7 @@ const SignInForm = ({
   email,
   password,
   fieldErrors,
+  message,
   onSubmit,
   onChange,
   onBlur,
@@ -47,6 +50,7 @@ const SignInForm = ({
         onSubmit={(event) => onSubmit(event)}
         aria-label="Sign in form"
         className={styles.form}
+        noValidate
       >
         <Input
           label="Email:"
@@ -82,6 +86,7 @@ const SignInForm = ({
           Sign In
         </Button>
       </form>
+      {message && <div className={styles[message.type]}>{message.text}</div>}
       <a href="#" data-testid="change-password">
         Forgot password?
       </a>

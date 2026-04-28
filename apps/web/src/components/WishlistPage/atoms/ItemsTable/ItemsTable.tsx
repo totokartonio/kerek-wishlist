@@ -34,12 +34,12 @@ const ItemsTable = ({
       <table className={styles.table}>
         <thead>
           <tr data-testid="items-table-header-row">
-            <th aria-label="Preview" />
+            <th aria-label="Preview" className={styles.previewCell} />
             <th className={styles.nameCell}>Item Name</th>
-            <th>Price</th>
-            {showClaim && <th>Status</th>}
-            <th>Link</th>
-            {canEdit && <th>Actions</th>}
+            <th className={styles.priceCell}>Price</th>
+            {showClaim && <th className={styles.statusCell}>Status</th>}
+            <th className={styles.linkCell}>Link</th>
+            {canEdit && <th className={styles.actionsCell}>Actions</th>}
           </tr>
         </thead>
         <tbody>
@@ -49,11 +49,13 @@ const ItemsTable = ({
               data-testid="items-table-body-row"
               className={item.archived ? styles.archived : ""}
             >
-              <td>
-                <div className={styles.placeholder} />
+              <td className={styles.previewCell}>
+                <div className={styles.previewWrapper}>
+                  <div className={styles.placeholder} />
+                </div>
               </td>
               <td className={styles.nameCell}>{item.name}</td>
-              <td>
+              <td className={styles.priceCell}>
                 {item.price === 0 && !item.currency
                   ? "—"
                   : item.currency
@@ -61,7 +63,7 @@ const ItemsTable = ({
                     : item.price}
               </td>
               {showClaim && (
-                <td>
+                <td className={styles.statusCell}>
                   <ClaimButton
                     item={item}
                     userId={userId}
@@ -70,7 +72,7 @@ const ItemsTable = ({
                   />
                 </td>
               )}
-              <td>
+              <td className={styles.linkCell}>
                 {item.link ? (
                   <a
                     href={item.link}
@@ -85,7 +87,7 @@ const ItemsTable = ({
                 )}
               </td>
               {canEdit && (
-                <td>
+                <td className={styles.actionsCell}>
                   <Actions
                     item={item}
                     onEdit={onEdit}

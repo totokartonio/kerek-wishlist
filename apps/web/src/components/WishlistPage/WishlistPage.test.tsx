@@ -7,6 +7,7 @@ import { getItems, deleteItem, updateItem, createItem } from "../../api/items";
 import { getWishlist } from "../../api/wishlists";
 import { getUser } from "../../api/users";
 import { getCollaborators } from "../../api/collaborators";
+import { ApiError } from "../../lib/apiError";
 
 const mockNavigate = vi.fn();
 
@@ -32,8 +33,17 @@ vi.mock("@tanstack/react-router", async (importOriginal) => {
   return {
     ...actual,
     useNavigate: () => mockNavigate,
+    LinkButton: ({ children }: { children: React.ReactNode }) => (
+      <a>{children}</a>
+    ),
   };
 });
+
+vi.mock("../ui/Button/LinkButton", () => ({
+  LinkButton: ({ children }: { children: React.ReactNode }) => (
+    <a>{children}</a>
+  ),
+}));
 
 const mockWishlist = {
   id: "test-wishlist-id",
@@ -311,5 +321,53 @@ describe("WishlistPage", () => {
     await user.click(screen.getByRole("button", { name: /manage/i }));
 
     expect(screen.getByTestId("wishlist-sidebar")).toBeInTheDocument();
+  });
+
+  test("shows 403 error when user has no access", async () => {
+    const error = new ApiError(403);
+    vi.mocked(getWishlist).mockRejectedValue(error);
+
+    renderWithClient(<WishlistPage wishlistId="test-wishlist-id" />);
+
+    expect(
+      await screen.findByRole("heading", { name: "Access Denied" }),
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByText("You don't have access to this wishlist."),
+    ).toBeInTheDocument();
+  });
+
+  test("shows 404 error when wishlist not found", async () => {
+    const error = new ApiError(404);
+    vi.mocked(getWishlist).mockRejectedValue(error);
+
+    renderWithClient(<WishlistPage wishlistId="test-wishlist-id" />);
+
+    expect(
+      await screen.findByRole("heading", { name: "Something went wrong" }),
+    ).toBeInTheDocument();
+    expect(await screen.findByText("Wishlist not found.")).toBeInTheDocument();
+  });
+
+  test("shows generic error when wishlist fails to load", async () => {
+    vi.mocked(getWishlist).mockRejectedValue(new Error("Failed"));
+
+    renderWithClient(<WishlistPage wishlistId="test-wishlist-id" />);
+
+    expect(
+      await screen.findByRole("heading", { name: "Something went wrong" }),
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByText("Can't load this wishlist now. Try again later."),
+    ).toBeInTheDocument();
+  });
+
+  test("shows loading skeleton while wishlist is loading", () => {
+    vi.mocked(getWishlist).mockImplementation(() => new Promise(() => {}));
+    vi.mocked(getItems).mockImplementation(() => new Promise(() => {}));
+
+    renderWithClient(<WishlistPage wishlistId="test-wishlist-id" />);
+
+    expect(screen.getAllByTestId("skeleton").length).toBeGreaterThanOrEqual(2);
   });
 });

@@ -6,6 +6,7 @@ import styles from "./InvitePage.module.css";
 import Card from "../ui/Card";
 import { Button } from "../ui/Button/Button";
 import { LinkButton } from "../ui/Button/LinkButton";
+import ErrorMessage from "../ui/ErrorMessage";
 
 type Props = {
   token: string;
@@ -19,7 +20,20 @@ const InvitePage = ({ token }: Props) => {
   const { mutate: joinInvite } = useJoinInvite();
 
   if (isLoading) return <p>Loading...</p>;
-  if (isError) return <p>Invite not found or has expired.</p>;
+  if (isError)
+    return (
+      <div className={styles.page}>
+        <ErrorMessage
+          title="Something went wrong"
+          message="Invite not found or has expired."
+          action={
+            <LinkButton variant="ghost" color="primary" to="/dashboard">
+              Go Back
+            </LinkButton>
+          }
+        />
+      </div>
+    );
   if (!invite) return null;
 
   const handleJoin = () => {

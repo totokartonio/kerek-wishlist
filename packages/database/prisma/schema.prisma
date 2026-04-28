@@ -111,7 +111,7 @@ model Collaborator {
   createdAt DateTime @default(now())
 
   // relations
-  user  User  @relation("CollaboratorOnWishlists", fields: [userId], references: [id])
+  user  User  @relation("CollaboratorOnWishlists", fields: [userId], references: [id], onDelete: Cascade)
   wishlist Wishlist @relation(fields: [wishlistId], references: [id], onDelete: Cascade)
 }
 

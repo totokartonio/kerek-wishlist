@@ -1,5 +1,7 @@
 import { Button } from "../../../../ui/Button/Button";
 import type { Item } from "@wishlist/types";
+import styles from "../ItemsTable.module.css";
+import { GiftIcon } from "@phosphor-icons/react";
 
 type Props = {
   item: Item;
@@ -11,7 +13,7 @@ type Props = {
 const ClaimButton = ({ item, userId, onClaim, onUnclaim }: Props) => {
   const claimedByMe =
     item.claimedByUserId !== null && item.claimedByUserId === userId;
-  const claimedBySomeoneElse = item.claimedByUserId !== null && !claimedByMe;
+  const claimedBySomeoneElse = item.status === "claimed" && !claimedByMe;
 
   return (
     <Button
@@ -21,8 +23,12 @@ const ClaimButton = ({ item, userId, onClaim, onUnclaim }: Props) => {
       disabled={claimedBySomeoneElse}
       onClick={() => (claimedByMe ? onUnclaim(item.id) : onClaim(item.id))}
       data-testid="items-table-claim-button"
+      className={styles.claimButton}
     >
-      {claimedByMe ? "Unclaim" : claimedBySomeoneElse ? "Claimed" : "Claim"}
+      <div className={styles.claimButtonContainer}>
+        <GiftIcon size={18} />
+        {claimedByMe ? "Unclaim" : claimedBySomeoneElse ? "Claimed" : "Claim"}
+      </div>
     </Button>
   );
 };

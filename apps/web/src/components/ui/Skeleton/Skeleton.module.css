@@ -1,0 +1,13 @@
+.skeleton {
+  background-color: var(--color-neutral-300);
+  animation: colorShift 1500ms infinite alternate;
+}
+
+@keyframes colorShift {
+  from {
+    background: var(--color-neutral-100);
+  }
+  to {
+    background: var(--color-neutral-200);
+  }
+}

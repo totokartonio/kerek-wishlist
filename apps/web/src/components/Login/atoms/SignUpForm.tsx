@@ -4,6 +4,7 @@ import Input from "../../../components/ui/Input";
 import { Button } from "../../../components/ui/Button/Button";
 import { EyeIcon } from "@phosphor-icons/react/dist/csr/Eye";
 import { EyeSlashIcon } from "@phosphor-icons/react/dist/csr/EyeSlash";
+import type { Message } from "../Login";
 
 type Props = {
   email: string;
@@ -14,6 +15,7 @@ type Props = {
     password: string;
     name: string;
   };
+  message: Message;
   onSubmit: (event: React.SubmitEvent<HTMLFormElement>) => void;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur: (event: React.FocusEvent<HTMLInputElement>) => void;
@@ -25,6 +27,7 @@ const SignUpForm = ({
   password,
   name,
   fieldErrors,
+  message,
   onSubmit,
   onChange,
   onBlur,
@@ -96,6 +99,7 @@ const SignUpForm = ({
           Sign Up
         </Button>
       </form>
+      {message && <div className={styles[message.type]}>{message.text}</div>}
       <div className={styles.switch}>
         Already have an account?{" "}
         <Button

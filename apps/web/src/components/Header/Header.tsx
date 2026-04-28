@@ -20,8 +20,8 @@ const Header = () => {
     }
     navigate({ to: "/login" });
   };
-  const handleLogout = async () => {
-    await signOut();
+  const handleLogout = () => {
+    signOut();
     setShowModal(false);
     navigate({ to: "/login" });
   };
