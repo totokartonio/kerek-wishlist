@@ -4,8 +4,10 @@ import { useState } from "react";
 import type { CreateWishlistDto } from "@wishlist/types";
 import WishlistModal from "../WishlistModal";
 import WishlistsGrid from "../WishlistsGrid";
+import { WishlistGridSkeleton } from "../WishlistsGrid/WishlistGridSkeleton";
 import { Button } from "../ui/Button/Button";
 import styles from "./Dashboard.module.css";
+import ErrorMessage from "../ui/ErrorMessage";
 
 const Dashboard = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -20,8 +22,15 @@ const Dashboard = () => {
     createWishlist(newWishlist, { onSuccess: () => setShowModal(false) });
   };
 
-  if (isLoading) return <p>Loading...</p>;
-  if (isError) return <p>Something went wrong.</p>;
+  if (isError)
+    return (
+      <div className={styles.wrapper}>
+        <ErrorMessage
+          title="Something went wrong"
+          message="Can't load your dashboard now. Try again later."
+        />
+      </div>
+    );
 
   return (
     <div className={styles.wrapper}>
@@ -39,7 +48,9 @@ const Dashboard = () => {
       </div>
       <section className={styles.section}>
         <h2>My Wishlists</h2>
-        {ownedWishlists.length > 0 ? (
+        {isLoading ? (
+          <WishlistGridSkeleton />
+        ) : ownedWishlists.length > 0 ? (
           <WishlistsGrid color="primary" wishlists={ownedWishlists} />
         ) : (
           <p className={styles.emptyState}>

@@ -7,6 +7,9 @@ export const useUpdateWishlist = () => {
   return useMutation({
     mutationFn: (variables: { id: string; dto: UpdateWishlistDto }) =>
       updateWishlist(variables.id, variables.dto),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["wishlists"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["wishlists"] });
+      queryClient.invalidateQueries({ queryKey: ["items"] });
+    },
   });
 };

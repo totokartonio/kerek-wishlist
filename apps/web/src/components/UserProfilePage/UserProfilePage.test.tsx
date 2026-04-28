@@ -15,6 +15,9 @@ vi.mock("@tanstack/react-router", async (importOriginal) => {
     ...actual,
     useNavigate: () => vi.fn(),
     Link: ({ children }: { children: React.ReactNode }) => <a>{children}</a>,
+    LinkButton: ({ children }: { children: React.ReactNode }) => (
+      <a>{children}</a>
+    ),
   };
 });
 
@@ -28,6 +31,7 @@ const mockWishlists: Wishlist[] = [
     ownerId: "user-1",
     createdAt: "2024-01-01",
     updatedAt: "2024-01-01",
+    hideClaimsFromOwner: true,
   },
 ];
 
@@ -48,7 +52,7 @@ describe("UserProfilePage", () => {
     vi.mocked(getUser).mockReturnValue(new Promise(() => {}));
     renderWithClient(<UserProfilePage userId="user-1" />);
 
-    expect(screen.getByText("Loading...")).toBeInTheDocument();
+    expect(document.querySelector('[class*="skeleton"]')).toBeTruthy();
   });
 
   test("shows error state", async () => {
@@ -56,26 +60,18 @@ describe("UserProfilePage", () => {
     renderWithClient(<UserProfilePage userId="user-1" />);
 
     expect(
-      await screen.findByText("Something went wrong."),
+      await screen.findByRole("heading", { name: "Something went wrong" }),
     ).toBeInTheDocument();
-  });
-
-  test("shows not found when user is null", async () => {
-    vi.mocked(getUser).mockResolvedValue(
-      null as unknown as ReturnType<typeof getUser> extends Promise<infer T>
-        ? T
-        : never,
-    );
-    renderWithClient(<UserProfilePage userId="user-1" />);
-
-    expect(await screen.findByText("User doesn't exist")).toBeInTheDocument();
+    expect(
+      await screen.findByText("Can't load this user now. Try again later."),
+    ).toBeInTheDocument();
   });
 
   test("shows not found when user is null", async () => {
     vi.mocked(getUser).mockResolvedValue(null as unknown as UserProfile);
     renderWithClient(<UserProfilePage userId="user-1" />);
 
-    expect(await screen.findByText("User doesn't exist")).toBeInTheDocument();
+    expect(await screen.findByText("User doesn't exist.")).toBeInTheDocument();
   });
 
   test("shows no wishlists message when wishlists are undefined", async () => {
@@ -84,6 +80,6 @@ describe("UserProfilePage", () => {
     );
     renderWithClient(<UserProfilePage userId="user-1" />);
 
-    expect(await screen.findByText("No wishlists found")).toBeInTheDocument();
+    expect(await screen.findByText("No wishlists found.")).toBeInTheDocument();
   });
 });

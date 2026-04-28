@@ -13,6 +13,9 @@ vi.mock("@tanstack/react-router", async (importOriginal) => {
     Link: ({ children, to }: { children: React.ReactNode; to: string }) => (
       <a href={to}>{children}</a>
     ),
+    LinkButton: ({ children }: { children: React.ReactNode }) => (
+      <a>{children}</a>
+    ),
   };
 });
 
@@ -37,7 +40,7 @@ describe("Dashboard", () => {
   test("renders dashboard with wishlists", async () => {
     renderWithClient(<Dashboard />);
 
-    await screen.findByText("Dashboard");
+    await screen.findByText("My Wishlist");
 
     expect(screen.getByText("Dashboard")).toBeInTheDocument();
     expect(screen.getByText("My Wishlist")).toBeInTheDocument();
@@ -88,7 +91,7 @@ describe("Dashboard", () => {
     vi.mocked(getWishlists).mockResolvedValue([mockWishlist, sharedWishlist]);
     renderWithClient(<Dashboard />);
 
-    await screen.findByText("My Wishlists");
+    await screen.findByText("My Wishlist");
 
     expect(screen.getByText("My Wishlists")).toBeInTheDocument();
     expect(screen.getByText("Shared with me")).toBeInTheDocument();
@@ -100,7 +103,12 @@ describe("Dashboard", () => {
     vi.mocked(getWishlists).mockReturnValue(new Promise(() => {}));
     renderWithClient(<Dashboard />);
 
-    expect(screen.getByText("Loading...")).toBeInTheDocument();
+    expect(screen.getByText("My Wishlists")).toBeInTheDocument();
+    // Skeleton renders instead of "Loading..." text
+    expect(
+      document.querySelector("._skeletonCard_cd0d8e") ??
+        document.querySelector('[class*="skeletonCard"]'),
+    ).toBeTruthy();
   });
 
   test("shows error state", async () => {
@@ -108,7 +116,12 @@ describe("Dashboard", () => {
     renderWithClient(<Dashboard />);
 
     expect(
-      await screen.findByText("Something went wrong."),
+      await screen.findByRole("heading", { name: "Something went wrong" }),
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByText(
+        "Can't load your dashboard now. Try again later.",
+      ),
     ).toBeInTheDocument();
   });
 });

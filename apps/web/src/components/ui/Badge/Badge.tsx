@@ -3,7 +3,7 @@ import styles from "./Badge.module.css";
 type Props = {
   variant: "primary" | "secondary" | "neutral" | "blue" | "green";
   className?: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 } & React.HTMLAttributes<HTMLDivElement>;
 
 const Badge = ({ variant, className, children, ...props }: Props) => {

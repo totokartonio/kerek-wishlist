@@ -18,6 +18,10 @@ import { Button } from "../ui/Button/Button";
 import ConfirmationModal from "../ui/ConfirmationModal";
 import { GearIcon } from "@phosphor-icons/react/dist/csr/Gear";
 import type { Wishlist } from "@wishlist/types";
+import ErrorMessage from "../ui/ErrorMessage";
+import { LinkButton } from "../ui/Button/LinkButton";
+import { ItemsTableSkeleton } from "./atoms/ItemsTable/atoms/ItemsTableSkeleton";
+import Skeleton from "../ui/Skeleton";
 
 type Props = {
   wishlistId: string;
@@ -39,7 +43,7 @@ const WishlistPage = ({ wishlistId }: Props) => {
     error: wishlistError,
   } = useWishlist(wishlistId);
 
-  const enabled = !!wishlist;
+  const enabled = !!wishlistId;
   const { data: collaborators } = useCollaborators(wishlistId, enabled);
   const { data: user } = useGetUser(wishlist?.ownerId ?? "", enabled);
   const { data: session } = useSession();
@@ -80,20 +84,95 @@ const WishlistPage = ({ wishlistId }: Props) => {
     ? items.find((item) => item.id === editingItemId)
     : null;
 
-  if (isLoading || isWishlistLoading) return <p>Loading...</p>;
+  if (isWishlistLoading) {
+    return (
+      <div className={styles.wrapper}>
+        <div className={styles.header}>
+          <Skeleton width={200} height={32} />
+        </div>
+        <ItemsTableSkeleton />
+      </div>
+    );
+  }
 
   if (isWishlistError) {
     if (wishlistError instanceof ApiError && wishlistError.status === 403) {
-      return <p>You don't have access to this wishlist.</p>;
+      return (
+        <div className={styles.wrapper}>
+          <ErrorMessage
+            title="Access Denied"
+            message="You don't have access to this wishlist."
+            action={
+              <LinkButton variant="ghost" color="primary" to="/dashboard">
+                Go Back
+              </LinkButton>
+            }
+          />
+        </div>
+      );
     }
+
     if (wishlistError instanceof ApiError && wishlistError.status === 404) {
-      return <p>Wishlist not found.</p>;
+      return (
+        <div className={styles.wrapper}>
+          <ErrorMessage
+            title="Something went wrong"
+            message="Wishlist not found."
+            action={
+              <LinkButton variant="ghost" color="primary" to="/dashboard">
+                Go Back
+              </LinkButton>
+            }
+          />
+        </div>
+      );
     }
-    return <p>Something went wrong.</p>;
+
+    return (
+      <div className={styles.wrapper}>
+        <ErrorMessage
+          title="Something went wrong"
+          message="Can't load this wishlist now. Try again later."
+          action={
+            <LinkButton variant="ghost" color="primary" to="/dashboard">
+              Go Back
+            </LinkButton>
+          }
+        />
+      </div>
+    );
   }
 
-  if (isError) return <p>Something went wrong.</p>;
-  if (!wishlist) return <p>Wishlist not found.</p>;
+  if (isError)
+    return (
+      <div className={styles.wrapper}>
+        <ErrorMessage
+          title="Something went wrong"
+          message="Can't load this wishlist now. Try again later."
+          action={
+            <LinkButton variant="ghost" color="primary" to="/dashboard">
+              Go Back
+            </LinkButton>
+          }
+        />
+      </div>
+    );
+
+  if (!wishlist)
+    return (
+      <div className={styles.wrapper}>
+        <ErrorMessage
+          title="Something went wrong"
+          message="Wishlist not found."
+          action={
+            <LinkButton variant="ghost" color="primary" to="/dashboard">
+              Go Back
+            </LinkButton>
+          }
+        />
+      </div>
+    );
+
   const showClaim = !isOwner || !wishlist.hideClaimsFromOwner;
 
   const handleSaveWishlist = (updatedWishlist: Wishlist) => {
@@ -133,18 +212,24 @@ const WishlistPage = ({ wishlistId }: Props) => {
           Add Wish
         </Button>
       )}
-      <ItemsTable
-        items={items}
-        onEdit={handleEditItem}
-        onDelete={handleDeleteItemWithConfirm}
-        onClaim={handleClaimItem}
-        onUnclaim={handleUnclaimItem}
-        onArchive={handleArchiveItem}
-        onUnarchive={handleUnarchiveItem}
-        userId={session?.user.id ?? null}
-        canEdit={canEdit}
-        showClaim={showClaim}
-      />
+      {isLoading ? (
+        <ItemsTableSkeleton />
+      ) : items.length > 0 ? (
+        <ItemsTable
+          items={items}
+          onEdit={handleEditItem}
+          onDelete={handleDeleteItemWithConfirm}
+          onClaim={handleClaimItem}
+          onUnclaim={handleUnclaimItem}
+          onArchive={handleArchiveItem}
+          onUnarchive={handleUnarchiveItem}
+          userId={session?.user.id ?? null}
+          canEdit={canEdit}
+          showClaim={showClaim}
+        />
+      ) : (
+        <p className={styles.emptyState}>No wishes yet.</p>
+      )}
       {showSidebar && (
         <Sidebar
           isOwner={isOwner}

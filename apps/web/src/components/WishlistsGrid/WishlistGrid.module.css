@@ -45,3 +45,36 @@
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
 }
+
+.skeletonCard {
+  padding: var(--spacing-2xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  color: white;
+  height: 130px;
+}
+
+.skeletonHeading {
+  display: block;
+  width: 120px;
+  height: 20px;
+  background-color: var(--color-neutral-200);
+  border-radius: var(--radius-sm);
+  animation: colorShift 1500ms infinite alternate;
+}
+
+.skeletonBadge {
+  width: 60px;
+  height: 30px;
+  animation: colorShift 1500ms infinite alternate;
+}
+
+@keyframes colorShift {
+  from {
+    background-color: var(--color-neutral-200);
+  }
+  to {
+    background-color: var(--color-neutral-300);
+  }
+}

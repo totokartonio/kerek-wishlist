@@ -16,6 +16,7 @@ export const auth = betterAuth({
   trustedOrigins: [process.env.CLIENT_URL || "http://localhost:5173"],
   emailAndPassword: {
     enabled: true,
+    autoSignIn: false,
   },
   database: prismaAdapter(prisma, {
     provider: "sqlite",
