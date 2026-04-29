@@ -19,3 +19,24 @@
   justify-content: center;
   gap: var(--spacing-lg);
 }
+
+.mobileOnly {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobileOnly {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    width: 55px;
+  }
+  .desktopOnly {
+    display: none;
+  }
+
+  .loginButton {
+    height: 40px;
+  }
+}

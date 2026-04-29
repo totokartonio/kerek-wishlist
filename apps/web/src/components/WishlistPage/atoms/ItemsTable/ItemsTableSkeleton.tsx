@@ -1,5 +1,5 @@
-import Skeleton from "../../../../ui/Skeleton";
-import styles from "../ItemsTable.module.css";
+import Skeleton from "../../../ui/Skeleton";
+import styles from "./ItemsTable.module.css";
 
 const ItemsTableSkeleton = () => {
   return (

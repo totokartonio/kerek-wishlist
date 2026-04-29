@@ -4,6 +4,8 @@ import { useSession, signOut } from "../../lib/auth-client";
 import { useState } from "react";
 import ConfirmationModal from "../ui/ConfirmationModal";
 import { Button } from "../ui/Button/Button";
+import { UserIcon } from "@phosphor-icons/react";
+import { LinkButton } from "../ui/Button/LinkButton";
 
 const Header = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -32,7 +34,18 @@ const Header = () => {
       <nav className={styles.navBar}>
         {loggedIn && (
           <div>
-            <Link to="/dashboard">{userName}</Link>
+            <Link to="/dashboard" className={styles.desktopOnly}>
+              {userName}
+            </Link>
+            <LinkButton
+              variant="ghost"
+              color="primary"
+              to="/dashboard"
+              size="sm"
+              className={styles.mobileOnly}
+            >
+              <UserIcon size={20} />
+            </LinkButton>
           </div>
         )}
         <Button
@@ -40,6 +53,7 @@ const Header = () => {
           size="sm"
           variant={loggedIn ? "ghost" : "flat"}
           color={loggedIn ? "secondary" : "primary"}
+          className={styles.loginButton}
         >
           {loggedIn ? "Log out" : "Log in"}
         </Button>

@@ -46,3 +46,10 @@
 .icon {
   color: var(--color-neutral-400);
 }
+
+@media (max-width: 768px) {
+  .buttonGroup svg {
+    width: 24px;
+    height: 24px;
+  }
+}

@@ -13,7 +13,7 @@
   position: fixed;
   top: 0;
   right: 0;
-  height: 100vh;
+  height: 100dvh;
   width: min(400px, 90vw);
   display: flex;
   flex-direction: column;
@@ -27,6 +27,8 @@
 .content {
   flex: 1;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
   display: flex;
   flex-direction: column;
   gap: var(--spacing-lg);
@@ -46,5 +48,17 @@
   }
   to {
     transform: translateX(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .backdrop {
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .drawer {
+    border-radius: var(--radius-lg) 0 0 var(--radius-lg);
   }
 }

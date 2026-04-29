@@ -1,0 +1,32 @@
+.button {
+  width: 60px;
+  height: 60px;
+  position: fixed;
+  right: var(--spacing-xl);
+  bottom: calc(var(--spacing-xl) + env(safe-area-inset-bottom));
+  border-radius: var(--radius-full);
+  border: none;
+  cursor: pointer;
+  display: none;
+  background-color: var(--color-primary);
+  box-shadow: var(--shadow-primary);
+  color: white;
+
+  &:active {
+    box-shadow: var(--shadow-primary-active);
+  }
+
+  &:hover {
+    filter: brightness(1.05);
+    text-decoration: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+  }
+}

@@ -20,8 +20,8 @@ const ConfirmationModal = ({
   cancelLabel = "No",
 }: Props) => {
   return (
-    <Modal onClose={onClose}>
-      <h2>{title}</h2>
+    <Modal onClose={onClose} className={styles.modal}>
+      <h2 className={styles.title}>{title}</h2>
       <p>{message}</p>
       <div className={styles.buttonGroup}>
         <Button variant="flat" color="primary" onClick={onConfirm}>

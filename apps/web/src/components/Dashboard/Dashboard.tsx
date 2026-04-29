@@ -8,6 +8,8 @@ import { WishlistGridSkeleton } from "../WishlistsGrid/WishlistGridSkeleton";
 import { Button } from "../ui/Button/Button";
 import styles from "./Dashboard.module.css";
 import ErrorMessage from "../ui/ErrorMessage";
+import { PlusIcon } from "@phosphor-icons/react";
+import FAB from "../ui/FAB";
 
 const Dashboard = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -42,9 +44,18 @@ const Dashboard = () => {
           onClick={() => {
             setShowModal(true);
           }}
+          className={styles.desktopOnly}
+          data-testid="create-wishlist-button"
         >
           Create wishlist
         </Button>
+        <FAB
+          icon={<PlusIcon size={30} />}
+          onClick={() => {
+            setShowModal(true);
+          }}
+          ariaLabel="Create wishlist"
+        />
       </div>
       <section className={styles.section}>
         <h2>My Wishlists</h2>

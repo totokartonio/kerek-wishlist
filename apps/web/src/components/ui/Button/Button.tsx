@@ -3,7 +3,7 @@ import styles from "./Button.module.css";
 type Props = {
   variant: "raised" | "flat" | "ghost";
   color: "primary" | "secondary" | "danger";
-  size?: "md" | "sm";
+  size?: "md" | "sm" | "icon";
   children: React.ReactNode;
   className?: string;
 } & React.ButtonHTMLAttributes<HTMLButtonElement>;

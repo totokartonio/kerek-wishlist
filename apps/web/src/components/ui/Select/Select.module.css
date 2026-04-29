@@ -23,6 +23,7 @@
   background-position: right var(--spacing-md) center;
   padding-right: var(--spacing-2xl);
   cursor: pointer;
+  color: inherit;
 
   &.selectError {
     border: 1px solid var(--color-error);

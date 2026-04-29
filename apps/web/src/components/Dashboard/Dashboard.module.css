@@ -25,3 +25,9 @@
   color: var(--color-neutral-400);
   padding: var(--spacing-lg);
 }
+
+@media (max-width: 768px) {
+  .desktopOnly {
+    display: none;
+  }
+}

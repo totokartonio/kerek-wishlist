@@ -4,3 +4,10 @@
   justify-content: center;
   gap: var(--spacing-xl);
 }
+
+@media (max-width: 768px) {
+  .modal {
+    align-items: center;
+    gap: var(--spacing-xl);
+  }
+}

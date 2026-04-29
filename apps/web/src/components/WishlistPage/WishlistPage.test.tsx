@@ -1,4 +1,4 @@
-import { screen, waitFor } from "@testing-library/react";
+import { screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, test, expect, vi, beforeEach } from "vitest";
 import { WishlistPage } from "./WishlistPage";
@@ -29,7 +29,6 @@ vi.mock("./atoms/Sidebar", () => ({
 
 vi.mock("@tanstack/react-router", async (importOriginal) => {
   const actual = (await importOriginal()) as Record<string, unknown>;
-
   return {
     ...actual,
     useNavigate: () => mockNavigate,
@@ -71,33 +70,27 @@ const mockItem = {
 
 const renderWishlistPage = async () => {
   renderWithClient(<WishlistPage wishlistId="test-wishlist-id" />);
-
   await screen.findByText("Test Wishlist");
 };
 
+const getTableWrapper = () => screen.getByTestId("items-table-wrapper");
+
 const openAddItemModal = async (user: ReturnType<typeof userEvent.setup>) => {
   await user.click(screen.getByTestId("wishlist-add-button"));
-
   return screen.findByTestId("add-item-modal-name-input");
 };
 
 const openEditItemModal = async (user: ReturnType<typeof userEvent.setup>) => {
-  const editButton = await screen.findByTestId("items-table-edit-button");
-
+  const editButton = await within(
+    await screen.findByTestId("items-table-wrapper"),
+  ).findByTestId("items-table-edit-button");
   await user.click(editButton);
-
   return screen.findByTestId("add-item-modal-name-input");
 };
 
 beforeEach(() => {
   vi.clearAllMocks();
-
-  /**
-   * Keeps tests safe if Modal uses a portal root.
-   * Harmless if your Modal renders directly into document.body.
-   */
   document.body.innerHTML = '<div id="modal-root"></div>';
-
   vi.mocked(getItems).mockResolvedValue([mockItem]);
   vi.mocked(deleteItem).mockResolvedValue(undefined);
   vi.mocked(updateItem).mockResolvedValue(mockItem);
@@ -113,12 +106,13 @@ describe("WishlistPage", () => {
 
     expect(screen.getByText("Test Wishlist")).toBeInTheDocument();
     expect(screen.getByTestId("wishlist-add-button")).toBeInTheDocument();
-    expect(await screen.findByText("Existing Item")).toBeInTheDocument();
+    expect(
+      within(getTableWrapper()).getByText("Existing Item"),
+    ).toBeInTheDocument();
   });
 
   test("opens add item modal when Add Wish button is clicked", async () => {
     const user = userEvent.setup();
-
     await renderWishlistPage();
     await openAddItemModal(user);
 
@@ -137,7 +131,6 @@ describe("WishlistPage", () => {
 
   test("closes add item modal when backdrop is clicked", async () => {
     const user = userEvent.setup();
-
     await renderWishlistPage();
     await openAddItemModal(user);
 
@@ -152,7 +145,6 @@ describe("WishlistPage", () => {
 
   test("closes add item modal when close button is clicked", async () => {
     const user = userEvent.setup();
-
     await renderWishlistPage();
     await openAddItemModal(user);
 
@@ -199,11 +191,6 @@ describe("WishlistPage", () => {
     };
 
     vi.mocked(createItem).mockResolvedValue(newItem);
-
-    /**
-     * This keeps the table updated after React Query invalidates/refetches.
-     * If your mutation uses optimistic updates, this still works.
-     */
     vi.mocked(getItems).mockResolvedValue([mockItem, newItem]);
 
     await renderWishlistPage();
@@ -213,26 +200,24 @@ describe("WishlistPage", () => {
       screen.getByTestId("add-item-modal-name-input"),
       "New Headphones",
     );
-
     await user.type(screen.getByTestId("add-item-modal-price-input"), "150");
-
     await user.selectOptions(
       screen.getByTestId("add-item-modal-currency-select"),
       "EUR",
     );
-
     await user.type(
       screen.getByTestId("add-item-modal-link-input"),
       "https://new.de",
     );
-
     await user.click(screen.getByTestId("add-item-modal-submit-button"));
 
     await waitFor(() => {
       expect(createItem).toHaveBeenCalled();
     });
 
-    expect(await screen.findByText("New Headphones")).toBeInTheDocument();
+    expect(
+      within(getTableWrapper()).getByText("New Headphones"),
+    ).toBeInTheDocument();
 
     await waitFor(() => {
       expect(
@@ -243,7 +228,6 @@ describe("WishlistPage", () => {
 
   test("opens edit item modal when edit button is clicked", async () => {
     const user = userEvent.setup();
-
     await renderWishlistPage();
     const nameInput = await openEditItemModal(user);
 
@@ -254,28 +238,24 @@ describe("WishlistPage", () => {
   test("updates item when edit form is submitted", async () => {
     const user = userEvent.setup();
 
-    const updatedItem = {
-      ...mockItem,
-      name: "Updated Item",
-    };
-
+    const updatedItem = { ...mockItem, name: "Updated Item" };
     vi.mocked(updateItem).mockResolvedValue(updatedItem);
     vi.mocked(getItems).mockResolvedValue([updatedItem]);
 
     await renderWishlistPage();
-
     const nameInput = await openEditItemModal(user);
 
     await user.clear(nameInput);
     await user.type(nameInput, "Updated Item");
-
     await user.click(screen.getByTestId("add-item-modal-submit-button"));
 
     await waitFor(() => {
       expect(updateItem).toHaveBeenCalled();
     });
 
-    expect(await screen.findByText("Updated Item")).toBeInTheDocument();
+    expect(
+      within(getTableWrapper()).getByText("Updated Item"),
+    ).toBeInTheDocument();
 
     await waitFor(() => {
       expect(screen.queryByText("Existing Item")).not.toBeInTheDocument();
@@ -287,16 +267,13 @@ describe("WishlistPage", () => {
 
   test("deletes item after confirmation", async () => {
     const user = userEvent.setup();
-
-    /**
-     * Initial render shows the item.
-     * After deletion/refetch, the API returns an empty list.
-     */
     vi.mocked(getItems).mockResolvedValueOnce([mockItem]).mockResolvedValue([]);
 
     await renderWishlistPage();
 
-    const deleteButton = await screen.findByTestId("items-table-delete-button");
+    const deleteButton = await within(
+      await screen.findByTestId("items-table-wrapper"),
+    ).findByTestId("items-table-delete-button");
 
     await user.click(deleteButton);
 
@@ -315,7 +292,6 @@ describe("WishlistPage", () => {
 
   test("opens sidebar when manage button is clicked", async () => {
     const user = userEvent.setup();
-
     await renderWishlistPage();
 
     await user.click(screen.getByRole("button", { name: /manage/i }));
@@ -324,9 +300,7 @@ describe("WishlistPage", () => {
   });
 
   test("shows 403 error when user has no access", async () => {
-    const error = new ApiError(403);
-    vi.mocked(getWishlist).mockRejectedValue(error);
-
+    vi.mocked(getWishlist).mockRejectedValue(new ApiError(403));
     renderWithClient(<WishlistPage wishlistId="test-wishlist-id" />);
 
     expect(
@@ -338,9 +312,7 @@ describe("WishlistPage", () => {
   });
 
   test("shows 404 error when wishlist not found", async () => {
-    const error = new ApiError(404);
-    vi.mocked(getWishlist).mockRejectedValue(error);
-
+    vi.mocked(getWishlist).mockRejectedValue(new ApiError(404));
     renderWithClient(<WishlistPage wishlistId="test-wishlist-id" />);
 
     expect(
@@ -351,7 +323,6 @@ describe("WishlistPage", () => {
 
   test("shows generic error when wishlist fails to load", async () => {
     vi.mocked(getWishlist).mockRejectedValue(new Error("Failed"));
-
     renderWithClient(<WishlistPage wishlistId="test-wishlist-id" />);
 
     expect(
@@ -365,7 +336,6 @@ describe("WishlistPage", () => {
   test("shows loading skeleton while wishlist is loading", () => {
     vi.mocked(getWishlist).mockImplementation(() => new Promise(() => {}));
     vi.mocked(getItems).mockImplementation(() => new Promise(() => {}));
-
     renderWithClient(<WishlistPage wishlistId="test-wishlist-id" />);
 
     expect(screen.getAllByTestId("skeleton").length).toBeGreaterThanOrEqual(2);
