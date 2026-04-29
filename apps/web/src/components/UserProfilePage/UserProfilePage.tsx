@@ -68,7 +68,7 @@ const UserProfilePage = ({ userId }: Props) => {
 
   return (
     <div className={styles.wrapper}>
-      <h1>{user.name}</h1>
+      <h1 className={styles.name}>{user.name}</h1>
       <section className={styles.section}>
         <h2>Wishlists</h2>
         {wishlists && wishlists.length > 0 ? (

@@ -17,6 +17,10 @@
     font-size: var(--font-size-sm);
   }
 
+  &.icon {
+    padding: 0;
+  }
+
   &.raised {
     &.primary {
       background-color: var(--color-primary);

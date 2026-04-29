@@ -1,8 +1,8 @@
 import { type Item } from "@wishlist/types";
 import styles from "./ItemsTable.module.css";
 import { CURRENCY_SYMBOLS } from "../../../../data";
-import { ClaimButton } from "./atoms/ClaimButton";
-import { Actions } from "./atoms/Actions";
+import ClaimButton from "../ClaimButton";
+import Actions from "../Actions";
 
 type Props = {
   items: Item[];
@@ -15,6 +15,7 @@ type Props = {
   userId: string | null;
   canEdit: boolean;
   showClaim: boolean;
+  className?: string;
 };
 
 const ItemsTable = ({
@@ -28,9 +29,13 @@ const ItemsTable = ({
   userId,
   canEdit,
   showClaim,
+  className,
 }: Props) => {
   return (
-    <div className={styles.wrapper}>
+    <div
+      className={`${styles.wrapper} ${className ?? ""}`}
+      data-testid="items-table-wrapper"
+    >
       <table className={styles.table}>
         <thead>
           <tr data-testid="items-table-header-row">

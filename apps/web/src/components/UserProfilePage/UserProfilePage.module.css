@@ -8,6 +8,13 @@
   gap: var(--spacing-2xl);
 }
 
+.name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
 .section {
   display: flex;
   flex-direction: column;

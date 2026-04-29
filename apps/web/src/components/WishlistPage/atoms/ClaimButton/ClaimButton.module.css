@@ -1,0 +1,18 @@
+.claimButton {
+  width: 100px;
+  padding-block: var(--spacing-sm);
+  padding-inline: 0;
+
+  .claimButtonContainer {
+    display: flex;
+    gap: var(--spacing-sm);
+    justify-content: center;
+    align-items: center;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-regular);
+  }
+}
+
+.icon {
+  color: var(--color-orange-500);
+}

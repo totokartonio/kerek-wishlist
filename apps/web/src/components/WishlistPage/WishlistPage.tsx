@@ -2,6 +2,7 @@ import styles from "./Wishlist.module.css";
 import { useState } from "react";
 import ItemModal from "./atoms/ItemModal";
 import ItemsTable from "./atoms/ItemsTable";
+import ItemsGrid from "./atoms/ItemsGrid";
 import { useWishlist } from "../../hooks/wishlists/useWishlist";
 import { useItems } from "../../hooks/items/useItems";
 import { useSession } from "../../lib/auth-client";
@@ -20,8 +21,10 @@ import { GearIcon } from "@phosphor-icons/react/dist/csr/Gear";
 import type { Wishlist } from "@wishlist/types";
 import ErrorMessage from "../ui/ErrorMessage";
 import { LinkButton } from "../ui/Button/LinkButton";
-import { ItemsTableSkeleton } from "./atoms/ItemsTable/atoms/ItemsTableSkeleton";
+import { ItemsTableSkeleton } from "./atoms/ItemsTable/ItemsTableSkeleton";
 import Skeleton from "../ui/Skeleton";
+import FAB from "../ui/FAB";
+import { PlusIcon } from "@phosphor-icons/react";
 
 type Props = {
   wishlistId: string;
@@ -193,40 +196,64 @@ const WishlistPage = ({ wishlistId }: Props) => {
   return (
     <div className={styles.wrapper}>
       <div className={styles.header}>
-        <h1>{wishlist.name}</h1>
+        <h1 className={styles.name}>{wishlist.name}</h1>
         <button
           onClick={() => setShowSidebar(true)}
           className={styles.iconButton}
         >
-          <span>Manage</span> <GearIcon size={24} />
+          <span className={styles.desktopOnly}>Manage</span>{" "}
+          <GearIcon size={24} />
         </button>
       </div>
       {canEdit && (
-        <Button
-          variant="raised"
-          color="primary"
-          onClick={() => setModalMode("addItem")}
-          data-testid="wishlist-add-button"
-          className={styles.addButton}
-        >
-          Add Wish
-        </Button>
+        <>
+          <Button
+            variant="raised"
+            color="primary"
+            onClick={() => setModalMode("addItem")}
+            data-testid="wishlist-add-button"
+            className={`${styles.addButton} ${styles.desktopOnly}`}
+          >
+            Add Wish
+          </Button>
+          <FAB
+            onClick={() => setModalMode("addItem")}
+            icon={<PlusIcon size={30} />}
+            ariaLabel="Add Wish"
+          />
+        </>
       )}
       {isLoading ? (
         <ItemsTableSkeleton />
       ) : items.length > 0 ? (
-        <ItemsTable
-          items={items}
-          onEdit={handleEditItem}
-          onDelete={handleDeleteItemWithConfirm}
-          onClaim={handleClaimItem}
-          onUnclaim={handleUnclaimItem}
-          onArchive={handleArchiveItem}
-          onUnarchive={handleUnarchiveItem}
-          userId={session?.user.id ?? null}
-          canEdit={canEdit}
-          showClaim={showClaim}
-        />
+        <>
+          <ItemsTable
+            items={items}
+            onEdit={handleEditItem}
+            onDelete={handleDeleteItemWithConfirm}
+            onClaim={handleClaimItem}
+            onUnclaim={handleUnclaimItem}
+            onArchive={handleArchiveItem}
+            onUnarchive={handleUnarchiveItem}
+            userId={session?.user.id ?? null}
+            canEdit={canEdit}
+            showClaim={showClaim}
+            className={styles.table}
+          />
+          <ItemsGrid
+            items={items}
+            onEdit={handleEditItem}
+            onDelete={handleDeleteItemWithConfirm}
+            onClaim={handleClaimItem}
+            onUnclaim={handleUnclaimItem}
+            onArchive={handleArchiveItem}
+            onUnarchive={handleUnarchiveItem}
+            userId={session?.user.id ?? null}
+            canEdit={canEdit}
+            showClaim={showClaim}
+            className={styles.grid}
+          />
+        </>
       ) : (
         <p className={styles.emptyState}>No wishes yet.</p>
       )}

@@ -15,6 +15,7 @@
   align-items: center;
   justify-content: center;
   flex: 1;
+  padding-inline: var(--spacing-lg);
 }
 
 .card {
@@ -58,4 +59,22 @@
   align-items: center;
   gap: var(--spacing-md);
   line-height: 1;
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding-block: var(--spacing-2xl);
+  }
+
+  .submitButton {
+    width: 100%;
+    min-height: 50px;
+  }
+
+  .switch {
+    font-size: var(--font-size-sm);
+    justify-content: space-between;
+    align-items: center;
+    justify-content: center;
+  }
 }

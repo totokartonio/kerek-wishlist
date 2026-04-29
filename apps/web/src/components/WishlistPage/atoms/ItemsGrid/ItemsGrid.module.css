@@ -1,0 +1,61 @@
+.grid {
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--spacing-lg);
+  justify-content: center;
+}
+
+.card {
+  display: flex;
+  gap: var(--spacing-md);
+  padding-block: var(--spacing-lg);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: var(--spacing-sm);
+  min-width: 0;
+}
+
+.name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.linkRow {
+  min-height: 20px;
+  font-size: var(--font-size-sm);
+  color: var(--color-neutral-400);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.placeholder {
+  width: 60px;
+  height: 60px;
+  background-color: var(--color-neutral-100);
+  border-radius: var(--radius-sm);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.actionsRow {
+  margin-top: var(--spacing-md);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.archived {
+  filter: grayscale(60%);
+  background-color: var(--color-neutral-100);
+  color: var(--color-neutral-400);
+}

@@ -66,7 +66,12 @@ const InvitePage = ({ token }: Props) => {
             {invite.wishlist.description && (
               <p>{invite.wishlist.description}</p>
             )}
-            <Button variant="raised" color="primary" onClick={handleJoin}>
+            <Button
+              variant="raised"
+              color="primary"
+              onClick={handleJoin}
+              className={styles.submitButton}
+            >
               Join
             </Button>
           </>

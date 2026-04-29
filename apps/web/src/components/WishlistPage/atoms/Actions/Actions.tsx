@@ -1,4 +1,4 @@
-import styles from "../ItemsTable.module.css";
+import styles from "./Actions.module.css";
 import { PencilIcon } from "@phosphor-icons/react/dist/csr/Pencil";
 import { TrashIcon } from "@phosphor-icons/react/dist/csr/Trash";
 import { ArchiveIcon } from "@phosphor-icons/react/dist/csr/Archive";

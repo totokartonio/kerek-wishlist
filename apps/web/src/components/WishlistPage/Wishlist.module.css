@@ -14,6 +14,13 @@
   justify-content: space-between;
 }
 
+.name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
 .iconButton {
   background: none;
   border: none;
@@ -36,4 +43,26 @@
   text-align: center;
   color: var(--color-neutral-400);
   padding: var(--spacing-lg);
+}
+
+.grid {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .desktopOnly {
+    display: none;
+  }
+  .iconButton svg {
+    width: 30px;
+    height: 30px;
+  }
+
+  .grid {
+    display: grid;
+  }
+
+  .table {
+    display: none;
+  }
 }

@@ -1,0 +1,43 @@
+.buttonGroup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-md);
+}
+
+.iconButton {
+  background: none;
+  border: none;
+  color: var(--color-neutral-400);
+  padding: var(--spacing-xs);
+  cursor: pointer;
+
+  .editIcon {
+    color: var(--color-orange-500);
+  }
+
+  .deleteIcon {
+    color: var(--color-pink-500);
+  }
+
+  .archiveIcon {
+    color: var(--color-neutral-400);
+  }
+
+  &:hover .editIcon {
+    color: var(--color-orange-300);
+  }
+  &:hover .deleteIcon {
+    color: var(--color-pink-300);
+  }
+  &:hover .archiveIcon {
+    color: var(--color-neutral-200);
+  }
+}
+
+@media (max-width: 768px) {
+  .iconButton svg {
+    width: 18px;
+    height: 18px;
+  }
+}

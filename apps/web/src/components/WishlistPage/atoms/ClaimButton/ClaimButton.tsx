@@ -1,6 +1,6 @@
-import { Button } from "../../../../ui/Button/Button";
+import { Button } from "../../../ui/Button/Button";
 import type { Item } from "@wishlist/types";
-import styles from "../ItemsTable.module.css";
+import styles from "./ClaimButton.module.css";
 import { GiftIcon } from "@phosphor-icons/react";
 
 type Props = {
@@ -24,9 +24,10 @@ const ClaimButton = ({ item, userId, onClaim, onUnclaim }: Props) => {
       onClick={() => (claimedByMe ? onUnclaim(item.id) : onClaim(item.id))}
       data-testid="items-table-claim-button"
       className={styles.claimButton}
+      size="sm"
     >
       <div className={styles.claimButtonContainer}>
-        <GiftIcon size={18} />
+        <GiftIcon size={18} className={styles.icon} />
         {claimedByMe ? "Unclaim" : claimedBySomeoneElse ? "Claimed" : "Claim"}
       </div>
     </Button>

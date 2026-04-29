@@ -52,16 +52,12 @@ describe("Dashboard", () => {
 
     await screen.findByText("Dashboard");
 
-    await user.click(screen.getByRole("button", { name: "Create wishlist" }));
+    await user.click(screen.getByTestId("create-wishlist-button"));
     expect(screen.getByText("New Wishlist")).toBeInTheDocument();
   });
 
   test("creates wishlist when form submitted", async () => {
-    const newWishlist = {
-      ...mockWishlist,
-      id: "2",
-      name: "New Wishlist",
-    };
+    const newWishlist = { ...mockWishlist, id: "2", name: "New Wishlist" };
 
     vi.mocked(createWishlist).mockResolvedValue(newWishlist);
     vi.mocked(getWishlists)
@@ -72,7 +68,7 @@ describe("Dashboard", () => {
     renderWithClient(<Dashboard />);
     await screen.findByText("Dashboard");
 
-    await user.click(screen.getByRole("button", { name: "Create wishlist" }));
+    await user.click(screen.getByTestId("create-wishlist-button"));
     await user.type(screen.getByLabelText("Name:"), "New Wishlist");
     await user.type(screen.getByLabelText("Description:"), "A description");
     await user.click(screen.getByRole("button", { name: "Add Wishlist" }));
@@ -94,7 +90,7 @@ describe("Dashboard", () => {
     await screen.findByText("My Wishlist");
 
     expect(screen.getByText("My Wishlists")).toBeInTheDocument();
-    expect(screen.getByText("Shared with me")).toBeInTheDocument();
+    expect(await screen.findByText("Shared with me")).toBeInTheDocument();
     expect(screen.getByText("My Wishlist")).toBeInTheDocument();
     expect(screen.getByText("Shared Wishlist")).toBeInTheDocument();
   });
