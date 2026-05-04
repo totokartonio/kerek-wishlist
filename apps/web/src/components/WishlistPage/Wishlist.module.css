@@ -45,10 +45,6 @@
   padding: var(--spacing-lg);
 }
 
-.grid {
-  display: none;
-}
-
 @media (max-width: 768px) {
   .desktopOnly {
     display: none;
@@ -56,13 +52,5 @@
   .iconButton svg {
     width: 30px;
     height: 30px;
-  }
-
-  .grid {
-    display: grid;
-  }
-
-  .table {
-    display: none;
   }
 }

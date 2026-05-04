@@ -1,0 +1,31 @@
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  height: 100%;
+}
+
+.button {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-neutral-200);
+  padding: var(--spacing-md);
+  font-size: var(--font-size-md);
+  background-color: var(--color-neutral-50);
+  cursor: pointer;
+  color: var(--color-neutral-500);
+  text-align: center;
+
+  &.active {
+    background-color: var(--color-neutral-200);
+    box-shadow: var(--shadow-inset-sm);
+  }
+
+  &:hover {
+    outline: 2px solid var(--color-pink-200);
+    outline-offset: -1px;
+  }
+}
+
+.applyButton {
+  margin-top: auto;
+}

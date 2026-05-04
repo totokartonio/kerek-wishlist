@@ -154,6 +154,9 @@
   --shadow-button-active:
     inset 0 4px 8px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.15);
 
+  --shadow-inset-sm:
+    inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.15);
+
   --shadow-focus: 0 0 0 3px rgba(0, 0, 0, 0.12);
 
   /* Breakpoints */

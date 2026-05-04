@@ -28,9 +28,13 @@ export type Item = {
   link: string;
   archived: boolean;
   claimedByUserId: string | null;
+  createdAt: string;
 };
 
-export type CreateItemDto = Omit<Item, "id" | "archived" | "claimedByUserId">;
+export type CreateItemDto = Omit<
+  Item,
+  "id" | "archived" | "claimedByUserId" | "createdAt"
+>;
 export type UpdateItemDto = Partial<CreateItemDto>;
 
 export const WISHLIST_VISIBILITY = ["private", "public", "invite"] as const;
@@ -103,3 +107,16 @@ export type ModalMode =
   | "confirmPrivate"
   | "confirmLeave"
   | null;
+
+export type ItemFilters = {
+  status?: "want" | "claimed";
+  claimedByMe?: boolean;
+  showArchived?: boolean;
+  sort?:
+    | "name-asc"
+    | "name-desc"
+    | "price-asc"
+    | "price-desc"
+    | "date-asc"
+    | "date-desc";
+};

@@ -67,17 +67,23 @@ const ItemsGrid = ({
                   userId={userId}
                   onClaim={onClaim}
                   onUnclaim={onUnclaim}
+                  fontSize="xs"
+                  iconSize={16}
                 />
               )}
-              {canEdit && (
-                <Actions
-                  item={item}
-                  onEdit={onEdit}
-                  onDelete={onDelete}
-                  onArchive={onArchive}
-                  onUnarchive={onUnarchive}
-                />
-              )}
+              <div className={styles.actions}>
+                {canEdit && (
+                  <Actions
+                    item={item}
+                    onEdit={onEdit}
+                    onDelete={onDelete}
+                    onArchive={onArchive}
+                    onUnarchive={onUnarchive}
+                    iconSize={20}
+                    space="sm"
+                  />
+                )}
+              </div>
             </div>
           </div>
         </Card>

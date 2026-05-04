@@ -1,8 +1,6 @@
 import styles from "./Wishlist.module.css";
 import { useState } from "react";
 import ItemModal from "./atoms/ItemModal";
-import ItemsTable from "./atoms/ItemsTable";
-import ItemsGrid from "./atoms/ItemsGrid";
 import { useWishlist } from "../../hooks/wishlists/useWishlist";
 import { useItems } from "../../hooks/items/useItems";
 import { useSession } from "../../lib/auth-client";
@@ -25,6 +23,9 @@ import { ItemsTableSkeleton } from "./atoms/ItemsTable/ItemsTableSkeleton";
 import Skeleton from "../ui/Skeleton";
 import FAB from "../ui/FAB";
 import { PlusIcon } from "@phosphor-icons/react";
+import ItemsView from "./atoms/ItemsView";
+import { useItemFilters } from "../../hooks/items/useItemsFilters";
+import { useFilteredItems } from "../../hooks/items/useFilteredItems";
 
 type Props = {
   wishlistId: string;
@@ -48,7 +49,10 @@ const WishlistPage = ({ wishlistId }: Props) => {
 
   const enabled = !!wishlistId;
   const { data: collaborators } = useCollaborators(wishlistId, enabled);
-  const { data: user } = useGetUser(wishlist?.ownerId ?? "", enabled);
+  const { data: user } = useGetUser(
+    wishlist?.ownerId ?? "",
+    !!wishlist?.ownerId,
+  );
   const { data: session } = useSession();
 
   const { mutate: createInvite } = useCreateInvite();
@@ -86,6 +90,14 @@ const WishlistPage = ({ wishlistId }: Props) => {
   const editingItem = editingItemId
     ? items.find((item) => item.id === editingItemId)
     : null;
+
+  const { filters, setFilter, clearFilters } = useItemFilters();
+
+  const filteredItems = useFilteredItems(
+    items,
+    filters,
+    session?.user.id ?? null,
+  );
 
   if (isWishlistLoading) {
     return (
@@ -227,8 +239,8 @@ const WishlistPage = ({ wishlistId }: Props) => {
         <ItemsTableSkeleton />
       ) : items.length > 0 ? (
         <>
-          <ItemsTable
-            items={items}
+          <ItemsView
+            items={filteredItems}
             onEdit={handleEditItem}
             onDelete={handleDeleteItemWithConfirm}
             onClaim={handleClaimItem}
@@ -238,20 +250,9 @@ const WishlistPage = ({ wishlistId }: Props) => {
             userId={session?.user.id ?? null}
             canEdit={canEdit}
             showClaim={showClaim}
-            className={styles.table}
-          />
-          <ItemsGrid
-            items={items}
-            onEdit={handleEditItem}
-            onDelete={handleDeleteItemWithConfirm}
-            onClaim={handleClaimItem}
-            onUnclaim={handleUnclaimItem}
-            onArchive={handleArchiveItem}
-            onUnarchive={handleUnarchiveItem}
-            userId={session?.user.id ?? null}
-            canEdit={canEdit}
-            showClaim={showClaim}
-            className={styles.grid}
+            filters={filters}
+            onFilterChange={setFilter}
+            onClearFilters={clearFilters}
           />
         </>
       ) : (

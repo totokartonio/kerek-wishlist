@@ -43,6 +43,13 @@ vi.mock("../ui/Button/LinkButton", () => ({
     <a>{children}</a>
   ),
 }));
+vi.mock("../../hooks/items/useItemsFilters", () => ({
+  useItemFilters: () => ({
+    filters: {},
+    setFilter: vi.fn(),
+    clearFilters: vi.fn(),
+  }),
+}));
 
 const mockWishlist = {
   id: "test-wishlist-id",
@@ -66,6 +73,7 @@ const mockItem = {
   status: "want" as const,
   archived: false,
   claimedByUserId: null,
+  createdAt: "2024-01-01",
 };
 
 const renderWishlistPage = async () => {

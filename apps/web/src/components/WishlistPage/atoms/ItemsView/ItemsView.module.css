@@ -1,0 +1,5 @@
+.emptyState {
+  text-align: center;
+  color: var(--color-neutral-400);
+  padding: var(--spacing-lg);
+}
