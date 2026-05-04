@@ -10,11 +10,24 @@ type Props = {
   onDelete: (id: string) => void;
   onArchive: (id: string) => void;
   onUnarchive: (id: string) => void;
+  iconSize?: number;
+  space?: "sm" | "md";
 };
 
-const Actions = ({ item, onEdit, onDelete, onArchive, onUnarchive }: Props) => {
+const Actions = ({
+  item,
+  onEdit,
+  onDelete,
+  onArchive,
+  onUnarchive,
+  iconSize = 22,
+  space = "md",
+}: Props) => {
   return (
-    <div className={styles.buttonGroup}>
+    <div
+      className={styles.buttonGroup}
+      style={{ gap: `var(--spacing-${space})` }}
+    >
       <button
         type="button"
         className={styles.iconButton}
@@ -22,7 +35,7 @@ const Actions = ({ item, onEdit, onDelete, onArchive, onUnarchive }: Props) => {
         onClick={() => onEdit(item.id)}
         data-testid="items-table-edit-button"
       >
-        <PencilIcon size={22} className={styles.editIcon} />
+        <PencilIcon size={iconSize} className={styles.editIcon} />
       </button>
       <button
         type="button"
@@ -31,7 +44,7 @@ const Actions = ({ item, onEdit, onDelete, onArchive, onUnarchive }: Props) => {
         onClick={() => onDelete(item.id)}
         data-testid="items-table-delete-button"
       >
-        <TrashIcon size={22} className={styles.deleteIcon} />
+        <TrashIcon size={iconSize} className={styles.deleteIcon} />
       </button>
       <button
         type="button"
@@ -42,7 +55,7 @@ const Actions = ({ item, onEdit, onDelete, onArchive, onUnarchive }: Props) => {
         }
         data-testid="items-table-archive-button"
       >
-        <ArchiveIcon size={22} className={styles.archiveIcon} />
+        <ArchiveIcon size={iconSize} className={styles.archiveIcon} />
       </button>
     </div>
   );

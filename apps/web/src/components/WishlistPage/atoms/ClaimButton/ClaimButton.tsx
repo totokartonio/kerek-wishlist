@@ -8,9 +8,18 @@ type Props = {
   userId: string | null;
   onClaim: (id: string) => void;
   onUnclaim: (id: string) => void;
+  fontSize?: "xs" | "sm" | "md";
+  iconSize?: number;
 };
 
-const ClaimButton = ({ item, userId, onClaim, onUnclaim }: Props) => {
+const ClaimButton = ({
+  item,
+  userId,
+  onClaim,
+  onUnclaim,
+  fontSize = "sm",
+  iconSize = 18,
+}: Props) => {
   const claimedByMe =
     item.claimedByUserId !== null && item.claimedByUserId === userId;
   const claimedBySomeoneElse = item.status === "claimed" && !claimedByMe;
@@ -26,8 +35,11 @@ const ClaimButton = ({ item, userId, onClaim, onUnclaim }: Props) => {
       className={styles.claimButton}
       size="sm"
     >
-      <div className={styles.claimButtonContainer}>
-        <GiftIcon size={18} className={styles.icon} />
+      <div
+        className={styles.claimButtonContainer}
+        style={{ fontSize: `var(--font-size-${fontSize})` }}
+      >
+        <GiftIcon size={iconSize} className={styles.icon} />
         {claimedByMe ? "Unclaim" : claimedBySomeoneElse ? "Claimed" : "Claim"}
       </div>
     </Button>

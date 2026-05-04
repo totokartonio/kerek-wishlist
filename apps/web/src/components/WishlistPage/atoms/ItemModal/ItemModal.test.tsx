@@ -19,6 +19,7 @@ const existingItem: Item = {
   image: "Image",
   status: "want",
   archived: false,
+  createdAt: "2026-01-01",
   claimedByUserId: null,
 };
 
