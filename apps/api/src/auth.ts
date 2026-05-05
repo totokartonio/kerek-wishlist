@@ -18,6 +18,24 @@ export const auth = betterAuth({
     enabled: true,
     autoSignIn: false,
   },
+  user: {
+    changeEmail: {
+      enabled: true,
+      updateEmailWithoutVerification: true,
+    },
+    deleteUser: {
+      enabled: true,
+      beforeDelete: async (user) => {
+        await prisma.item.updateMany({
+          where: { claimedByUserId: user.id },
+          data: { claimedByUserId: null },
+        });
+        await prisma.wishlist.deleteMany({
+          where: { ownerId: user.id },
+        });
+      },
+    },
+  },
   database: prismaAdapter(prisma, {
     provider: "sqlite",
   }),

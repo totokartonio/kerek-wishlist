@@ -15,6 +15,7 @@ const mockItems: Item[] = [
     status: "want",
     archived: false,
     claimedByUserId: null,
+    createdAt: "2024-01-01",
   },
   {
     id: "2",
@@ -26,6 +27,7 @@ const mockItems: Item[] = [
     status: "claimed",
     archived: false,
     claimedByUserId: "user-2",
+    createdAt: "2024-01-01",
   },
 ];
 
@@ -71,14 +73,14 @@ describe("ItemsTable", () => {
   test("renders empty table when no items", () => {
     render(<ItemsTable {...defaultProps} items={[]} />);
 
-    expect(screen.getByText("Item Name")).toBeInTheDocument();
+    expect(screen.getByText("Name")).toBeInTheDocument();
     expect(screen.queryAllByTestId("items-table-body-row")).toHaveLength(0);
   });
 
   test("renders table headers with actions and status when canEdit and showClaim", () => {
     render(<ItemsTable {...defaultProps} />);
 
-    expect(screen.getByText("Item Name")).toBeInTheDocument();
+    expect(screen.getByText("Name")).toBeInTheDocument();
     expect(screen.getByText("Price")).toBeInTheDocument();
     expect(screen.getByText("Status")).toBeInTheDocument();
     expect(screen.getByText("Link")).toBeInTheDocument();

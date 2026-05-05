@@ -4,13 +4,11 @@
   justify-content: space-between;
   border-bottom: 1px solid var(--color-neutral-200);
   background-color: var(--color-background);
-  padding: var(--spacing-lg);
+  padding: var(--spacing-lg) var(--spacing-xl);
 }
 
-.logo {
-  font-weight: var(--font-weight-bold);
-  color: var(--color-primary);
-  font-size: var(--font-size-lg);
+.logoImage {
+  height: 55px;
 }
 
 .navBar {
@@ -20,11 +18,26 @@
   gap: var(--spacing-lg);
 }
 
+.trigger {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  cursor: pointer;
+  color: var(--color-primary);
+
+  &:hover {
+    color: var(--color-orange-400);
+  }
+}
+
 .mobileOnly {
   display: none;
 }
 
 @media (max-width: 768px) {
+  .logoImage {
+    height: 45px;
+  }
   .mobileOnly {
     display: flex;
     align-items: center;

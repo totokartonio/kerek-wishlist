@@ -27,6 +27,11 @@
   border-radius: var(--radius-full);
   padding: var(--spacing-xs);
   box-shadow: var(--shadow-inset-sm);
+
+  &:hover {
+    outline: 2px solid var(--color-pink-200);
+    outline-offset: -1px;
+  }
 }
 
 .toggleOption {
@@ -43,6 +48,7 @@
 
   &.active {
     background-color: var(--color-neutral-50);
+    box-shadow: var(--shadow-sm);
   }
 }
 

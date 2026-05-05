@@ -1,0 +1,77 @@
+.wrapper {
+  padding: var(--spacing-xl);
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2xl);
+}
+
+.message {
+  padding: var(--spacing-md);
+  font-size: var(--font-size-sm);
+  border-radius: var(--radius-full);
+  max-width: 680px;
+  position: fixed;
+  top: var(--spacing-lg);
+  right: var(--spacing-lg);
+
+  &.success {
+    border: 1px solid var(--color-green-500);
+    background-color: var(--color-green-100);
+    color: var(--color-green-700);
+  }
+
+  &.error {
+    border: 1px solid var(--color-pink-400);
+    background-color: var(--color-pink-100);
+    color: var(--color-pink-700);
+  }
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  max-width: 680px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+.form {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--spacing-md);
+  width: 100%;
+}
+
+.inputWrapper {
+  flex: 1;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.input {
+  max-height: 40px;
+}
+
+.iconButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  color: var(--color-neutral-400);
+}
+
+.deleteButton {
+  max-width: 200px;
+}

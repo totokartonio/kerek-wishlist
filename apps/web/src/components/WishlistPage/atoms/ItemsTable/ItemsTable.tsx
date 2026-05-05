@@ -40,7 +40,7 @@ const ItemsTable = ({
         <thead>
           <tr data-testid="items-table-header-row">
             <th aria-label="Preview" className={styles.previewCell} />
-            <th className={styles.nameCell}>Item Name</th>
+            <th className={styles.nameCell}>Name</th>
             <th className={styles.priceCell}>Price</th>
             {showClaim && <th className={styles.statusCell}>Status</th>}
             <th className={styles.linkCell}>Link</th>

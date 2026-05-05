@@ -21,3 +21,12 @@ export const getUserWishlists = async (userId: string): Promise<Wishlist[]> => {
   });
   return handleResponse<Wishlist[]>(response);
 };
+
+export const checkEmail = async (
+  email: string,
+): Promise<{ taken: boolean }> => {
+  const response = await fetch(
+    `${BASE_URL}/api/users/check-email?email=${encodeURIComponent(email)}`,
+  );
+  return handleResponse<{ taken: boolean }>(response);
+};
