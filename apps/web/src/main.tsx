@@ -1,4 +1,4 @@
-import { StrictMode, useEffect } from "react";
+import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./styles/reset.css";
 import "./styles/index.css";
@@ -45,14 +45,7 @@ const queryClient = new QueryClient({
 
 export function App() {
   const { data: session, isPending } = authClient.useSession();
-  const userId = session?.user.id ?? null;
-
-  useEffect(() => {
-    router.invalidate();
-  }, [userId]);
-
-  if (isPending && session === undefined) return <p>Loading...</p>;
-
+  if (isPending) return <p>Loading...</p>;
   return (
     <RouterProvider router={router} context={{ session: session ?? null }} />
   );

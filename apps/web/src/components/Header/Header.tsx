@@ -1,62 +1,84 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import styles from "./Header.module.css";
 import { useSession, signOut } from "../../lib/auth-client";
 import { useState } from "react";
 import ConfirmationModal from "../ui/ConfirmationModal";
-import { Button } from "../ui/Button/Button";
 import { UserIcon } from "@phosphor-icons/react";
-import { LinkButton } from "../ui/Button/LinkButton";
+import { useIsMobile } from "../../hooks/ui/useIsMobile";
+import logoDesktop from "../../assets/logo-desktop.png";
+import logoMobile from "../../assets/logo-mobile.png";
+import Dropdown from "../ui/Dropdown";
+import {
+  HouseIcon,
+  GearIcon,
+  CaretDownIcon,
+  SignOutIcon,
+} from "@phosphor-icons/react";
 
 const Header = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
 
-  const navigate = useNavigate();
+  const isMobile = useIsMobile();
+
   const { data: session } = useSession();
   const loggedIn = !!session;
   const userName = session?.user.name;
 
-  const handleClick = async () => {
-    if (loggedIn) {
-      setShowModal(true);
-      return;
-    }
-    navigate({ to: "/login" });
-  };
-  const handleLogout = () => {
-    signOut();
+  const handleLogout = async () => {
+    await signOut();
     setShowModal(false);
-    navigate({ to: "/login" });
+    window.location.href = "/login";
   };
+
+  const dropdownItems = [
+    {
+      type: "link" as const,
+      label: "Dashboard",
+      icon: <HouseIcon size={16} />,
+      to: "/dashboard",
+    },
+    {
+      type: "link" as const,
+      label: "Settings",
+      icon: <GearIcon size={16} />,
+      to: "/settings",
+    },
+    {
+      type: "action" as const,
+      label: "Log out",
+      icon: <SignOutIcon size={16} />,
+      onClick: () => setShowModal(true),
+      danger: true,
+      divider: true,
+    },
+  ];
+
+  const dropdownTrigger = (
+    <div className={styles.trigger}>
+      {isMobile ? <UserIcon size={20} /> : <span>{userName}</span>}
+      <CaretDownIcon size={14} />
+    </div>
+  );
 
   return (
     <div className={styles.header}>
-      <div className={styles.logo}>Logo</div>
+      <div className={styles.logo}>
+        <Link to="/dashboard">
+          {isMobile ? (
+            <img src={logoMobile} alt="" className={styles.logoImage} />
+          ) : (
+            <img src={logoDesktop} alt="Kérek" className={styles.logoImage} />
+          )}
+        </Link>
+      </div>
       <nav className={styles.navBar}>
-        {loggedIn && (
-          <div>
-            <Link to="/dashboard" className={styles.desktopOnly}>
-              {userName}
-            </Link>
-            <LinkButton
-              variant="ghost"
-              color="primary"
-              to="/dashboard"
-              size="sm"
-              className={styles.mobileOnly}
-            >
-              <UserIcon size={20} />
-            </LinkButton>
-          </div>
+        {loggedIn ? (
+          <Dropdown trigger={dropdownTrigger} items={dropdownItems} />
+        ) : (
+          <Link to="/login" className={styles.loginLink}>
+            Log in
+          </Link>
         )}
-        <Button
-          onClick={handleClick}
-          size="sm"
-          variant={loggedIn ? "ghost" : "flat"}
-          color={loggedIn ? "secondary" : "primary"}
-          className={styles.loginButton}
-        >
-          {loggedIn ? "Log out" : "Log in"}
-        </Button>
       </nav>
       {showModal && (
         <ConfirmationModal

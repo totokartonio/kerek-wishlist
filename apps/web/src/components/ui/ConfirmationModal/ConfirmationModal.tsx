@@ -4,7 +4,7 @@ import styles from "./ConfirmationModal.module.css";
 
 type Props = {
   title: string;
-  message: string;
+  message: React.ReactNode;
   onConfirm: () => void;
   onClose: () => void;
   confirmLabel?: string;

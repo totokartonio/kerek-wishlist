@@ -5,6 +5,21 @@ import { auth } from "../auth";
 
 const users = new Hono<{ Variables: AuthVariables }>();
 
+users.get("/check-email", async (c) => {
+  const email = c.req.query("email");
+
+  if (!email) {
+    return c.json({ error: "Email is required" }, 400);
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { email },
+    select: { id: true },
+  });
+
+  return c.json({ taken: !!user });
+});
+
 users.get("/:userId", async (c) => {
   try {
     const userId = c.req.param("userId");

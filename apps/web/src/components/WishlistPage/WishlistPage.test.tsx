@@ -168,7 +168,7 @@ describe("WishlistPage", () => {
   test("renders table headers — actions visible, status hidden for owner in surprise mode", async () => {
     await renderWishlistPage();
 
-    expect(screen.getByText("Item Name")).toBeInTheDocument();
+    expect(screen.getByText("Name")).toBeInTheDocument();
     expect(screen.getByText("Price")).toBeInTheDocument();
     expect(screen.getByText("Link")).toBeInTheDocument();
     expect(screen.getByText("Actions")).toBeInTheDocument();

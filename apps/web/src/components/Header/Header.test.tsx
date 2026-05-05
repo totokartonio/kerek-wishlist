@@ -12,7 +12,7 @@ vi.mock("@tanstack/react-router", async (importOriginal) => {
   const actual = (await importOriginal()) as Record<string, unknown>;
   return {
     ...actual,
-    useNavigate: () => mockNavigate,
+    useNavigate: () => vi.fn(),
     Link: ({ children, to }: { children: React.ReactNode; to: string }) => (
       <a href={to}>{children}</a>
     ),
@@ -26,7 +26,6 @@ vi.mock("../ui/ConfirmationModal", () => ({
     onConfirm,
   }: {
     title: string;
-    message: string;
     onClose: () => void;
     onConfirm: () => void;
   }) => (
@@ -38,7 +37,9 @@ vi.mock("../ui/ConfirmationModal", () => ({
   ),
 }));
 
-const mockNavigate = vi.fn();
+vi.mock("../../hooks/ui/useIsMobile", () => ({
+  useIsMobile: () => false,
+}));
 
 import { useSession, signOut } from "../../lib/auth-client";
 
@@ -81,40 +82,54 @@ beforeEach(() => {
 });
 
 describe("Header", () => {
-  test("renders logo", () => {
+  test("renders logo image", () => {
     vi.mocked(useSession).mockReturnValue(mockSessionLoggedOut);
     render(<Header />);
 
-    expect(screen.getByText("Logo")).toBeInTheDocument();
+    expect(screen.getByAltText("Kérek")).toBeInTheDocument();
   });
 
-  test("shows login button when not logged in", () => {
+  test("shows Log in link when not logged in", () => {
     vi.mocked(useSession).mockReturnValue(mockSessionLoggedOut);
     render(<Header />);
 
-    expect(screen.getByRole("button", { name: "Log in" })).toBeInTheDocument();
-    expect(
-      screen.queryByRole("button", { name: "Log out" }),
-    ).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Log in" })).toBeInTheDocument();
+    expect(screen.queryByText("Test User")).not.toBeInTheDocument();
   });
 
-  test("shows user name and logout button when logged in", () => {
+  test("shows username as dropdown trigger when logged in", () => {
     vi.mocked(useSession).mockReturnValue(mockSessionLoggedIn);
     render(<Header />);
 
     expect(screen.getByText("Test User")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Log out" })).toBeInTheDocument();
     expect(
-      screen.queryByRole("button", { name: "Log in" }),
+      screen.queryByRole("link", { name: "Log in" }),
     ).not.toBeInTheDocument();
   });
 
-  test("clicking logout shows modal", async () => {
+  test("clicking username opens dropdown with nav items", async () => {
     vi.mocked(useSession).mockReturnValue(mockSessionLoggedIn);
     const user = userEvent.setup();
     render(<Header />);
 
-    await user.click(screen.getByRole("button", { name: "Log out" }));
+    await user.click(screen.getByText("Test User"));
+
+    expect(
+      screen.getByRole("link", { name: /dashboard/i }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /settings/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /log out/i }),
+    ).toBeInTheDocument();
+  });
+
+  test("clicking Log out in dropdown shows confirmation modal", async () => {
+    vi.mocked(useSession).mockReturnValue(mockSessionLoggedIn);
+    const user = userEvent.setup();
+    render(<Header />);
+
+    await user.click(screen.getByText("Test User"));
+    await user.click(screen.getByRole("button", { name: /log out/i }));
 
     expect(
       screen.getByRole("heading", { name: "Log Out" }),
@@ -126,7 +141,8 @@ describe("Header", () => {
     const user = userEvent.setup();
     render(<Header />);
 
-    await user.click(screen.getByRole("button", { name: "Log out" }));
+    await user.click(screen.getByText("Test User"));
+    await user.click(screen.getByRole("button", { name: /log out/i }));
     await user.click(screen.getByRole("button", { name: "No" }));
 
     expect(signOut).not.toHaveBeenCalled();
@@ -135,16 +151,29 @@ describe("Header", () => {
     ).not.toBeInTheDocument();
   });
 
-  test("modal confirm calls signOut and navigates to /login", async () => {
+  test("modal confirm calls signOut and redirects to /login", async () => {
     vi.mocked(useSession).mockReturnValue(mockSessionLoggedIn);
     vi.mocked(signOut).mockResolvedValue({} as never);
     const user = userEvent.setup();
+
+    const originalLocation = window.location;
+    Object.defineProperty(window, "location", {
+      writable: true,
+      value: { href: "" },
+    });
+
     render(<Header />);
 
-    await user.click(screen.getByRole("button", { name: "Log out" }));
+    await user.click(screen.getByText("Test User"));
+    await user.click(screen.getByRole("button", { name: /log out/i }));
     await user.click(screen.getByRole("button", { name: "Yes" }));
 
     expect(signOut).toHaveBeenCalled();
-    expect(mockNavigate).toHaveBeenCalledWith({ to: "/login" });
+    expect(window.location.href).toBe("/login");
+
+    Object.defineProperty(window, "location", {
+      writable: true,
+      value: originalLocation,
+    });
   });
 });

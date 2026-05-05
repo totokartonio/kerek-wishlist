@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as IndexRouteImport } from './routes/index'
@@ -16,6 +17,11 @@ import { Route as WishlistsWishlistIdRouteImport } from './routes/wishlists.$wis
 import { Route as UsersUserIdRouteImport } from './routes/users.$userId'
 import { Route as InvitesTokenRouteImport } from './routes/invites.$token'
 
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -51,6 +57,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
+  '/settings': typeof SettingsRoute
   '/invites/$token': typeof InvitesTokenRoute
   '/users/$userId': typeof UsersUserIdRoute
   '/wishlists/$wishlistId': typeof WishlistsWishlistIdRoute
@@ -59,6 +66,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
+  '/settings': typeof SettingsRoute
   '/invites/$token': typeof InvitesTokenRoute
   '/users/$userId': typeof UsersUserIdRoute
   '/wishlists/$wishlistId': typeof WishlistsWishlistIdRoute
@@ -68,6 +76,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
+  '/settings': typeof SettingsRoute
   '/invites/$token': typeof InvitesTokenRoute
   '/users/$userId': typeof UsersUserIdRoute
   '/wishlists/$wishlistId': typeof WishlistsWishlistIdRoute
@@ -78,6 +87,7 @@ export interface FileRouteTypes {
     | '/'
     | '/dashboard'
     | '/login'
+    | '/settings'
     | '/invites/$token'
     | '/users/$userId'
     | '/wishlists/$wishlistId'
@@ -86,6 +96,7 @@ export interface FileRouteTypes {
     | '/'
     | '/dashboard'
     | '/login'
+    | '/settings'
     | '/invites/$token'
     | '/users/$userId'
     | '/wishlists/$wishlistId'
@@ -94,6 +105,7 @@ export interface FileRouteTypes {
     | '/'
     | '/dashboard'
     | '/login'
+    | '/settings'
     | '/invites/$token'
     | '/users/$userId'
     | '/wishlists/$wishlistId'
@@ -103,6 +115,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DashboardRoute: typeof DashboardRoute
   LoginRoute: typeof LoginRoute
+  SettingsRoute: typeof SettingsRoute
   InvitesTokenRoute: typeof InvitesTokenRoute
   UsersUserIdRoute: typeof UsersUserIdRoute
   WishlistsWishlistIdRoute: typeof WishlistsWishlistIdRoute
@@ -110,6 +123,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -159,6 +179,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DashboardRoute: DashboardRoute,
   LoginRoute: LoginRoute,
+  SettingsRoute: SettingsRoute,
   InvitesTokenRoute: InvitesTokenRoute,
   UsersUserIdRoute: UsersUserIdRoute,
   WishlistsWishlistIdRoute: WishlistsWishlistIdRoute,
