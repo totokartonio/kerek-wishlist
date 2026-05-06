@@ -18,6 +18,12 @@
   gap: var(--spacing-lg);
 }
 
+.userWrapper {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: center;
+}
+
 .trigger {
   display: flex;
   align-items: center;

@@ -23,7 +23,9 @@ collaborators.get("/", async (c) => {
 
   const wishlistCollaborators = await prisma.collaborator.findMany({
     where: { wishlistId },
-    include: { user: { select: { id: true, name: true, email: true } } },
+    include: {
+      user: { select: { id: true, name: true, email: true, avatar: true } },
+    },
   });
 
   return c.json(wishlistCollaborators);

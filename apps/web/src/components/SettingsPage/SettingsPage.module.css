@@ -75,3 +75,14 @@
 .deleteButton {
   max-width: 200px;
 }
+
+.avatarRow {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.avatarHint {
+  font-size: var(--font-size-sm);
+  color: var(--color-neutral-400);
+}

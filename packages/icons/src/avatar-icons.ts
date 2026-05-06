@@ -1,0 +1,17 @@
+export const AVATAR_ICONS = [
+  "bear",
+  "bird",
+  "cat",
+  "chicken",
+  "cow",
+  "dog",
+  "elephant",
+  "fish",
+  "horse",
+  "lion",
+  "monkey",
+  "pig",
+  "rabbit",
+  "sheep",
+  "turtle",
+];

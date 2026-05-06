@@ -22,6 +22,7 @@ export const useWishlistActions = ({ wishlist, setModalMode }: Props) => {
         id: wishlist.id,
         dto: {
           name: updatedWishlist.name,
+          icon: updatedWishlist.icon,
           description: updatedWishlist.description ?? undefined,
           visibility: updatedWishlist.visibility,
           hideClaimsFromOwner: updatedWishlist.hideClaimsFromOwner,

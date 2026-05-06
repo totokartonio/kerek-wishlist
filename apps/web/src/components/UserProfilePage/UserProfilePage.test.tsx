@@ -21,7 +21,7 @@ vi.mock("@tanstack/react-router", async (importOriginal) => {
   };
 });
 
-const mockUser: UserProfile = { id: "user-1", name: "Jane Doe" };
+const mockUser: UserProfile = { id: "user-1", name: "Jane Doe", avatar: null };
 const mockWishlists: Wishlist[] = [
   {
     id: "w-1",
@@ -32,6 +32,7 @@ const mockWishlists: Wishlist[] = [
     createdAt: "2024-01-01",
     updatedAt: "2024-01-01",
     hideClaimsFromOwner: true,
+    icon: "star",
   },
 ];
 

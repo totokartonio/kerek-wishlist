@@ -3,11 +3,12 @@ import styles from "./Header.module.css";
 import { useSession, signOut } from "../../lib/auth-client";
 import { useState } from "react";
 import ConfirmationModal from "../ui/ConfirmationModal";
-import { UserIcon } from "@phosphor-icons/react";
 import { useIsMobile } from "../../hooks/ui/useIsMobile";
 import logoDesktop from "../../assets/logo-desktop.png";
 import logoMobile from "../../assets/logo-mobile.png";
 import Dropdown from "../ui/Dropdown";
+import Avatar from "../ui/Avatar";
+import { useGetUser } from "../../hooks/users/useGetUser";
 import {
   HouseIcon,
   GearIcon,
@@ -23,6 +24,7 @@ const Header = () => {
   const { data: session } = useSession();
   const loggedIn = !!session;
   const userName = session?.user.name;
+  const { data: user } = useGetUser(session?.user.id ?? "", !!session);
 
   const handleLogout = async () => {
     await signOut();
@@ -55,7 +57,14 @@ const Header = () => {
 
   const dropdownTrigger = (
     <div className={styles.trigger}>
-      {isMobile ? <UserIcon size={20} /> : <span>{userName}</span>}
+      {isMobile ? (
+        <Avatar avatar={user?.avatar ?? null} size={42} />
+      ) : (
+        <div className={styles.userWrapper}>
+          <Avatar avatar={user?.avatar ?? null} size={52} />
+          <span>{userName}</span>
+        </div>
+      )}
       <CaretDownIcon size={14} />
     </div>
   );

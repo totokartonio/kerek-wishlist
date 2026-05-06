@@ -23,6 +23,8 @@ const mockWishlists: WishlistWithRole[] = [
     createdAt: "2024-01-01",
     updatedAt: "2024-01-01",
     role: "owner",
+    icon: "star",
+    hideClaimsFromOwner: true,
   },
   {
     id: "2",
@@ -33,6 +35,8 @@ const mockWishlists: WishlistWithRole[] = [
     createdAt: "2024-01-02",
     updatedAt: "2024-01-02",
     role: "owner",
+    icon: "star",
+    hideClaimsFromOwner: true,
   },
 ];
 

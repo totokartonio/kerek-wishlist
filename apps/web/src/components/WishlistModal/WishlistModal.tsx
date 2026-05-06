@@ -4,12 +4,15 @@ import {
   WISHLIST_VISIBILITY,
   type CreateWishlistDto,
 } from "@wishlist/types";
+import { WISHLIST_ICONS } from "@wishlist/icons";
 import Modal from "../ui/Modal";
 import { useState, type SubmitEventHandler } from "react";
 import styles from "./WishlistModal.module.css";
 import { Button } from "../ui/Button/Button";
 import Input from "../ui/Input";
 import Select from "../ui/Select";
+import IconPicker from "../ui/IconPicker";
+import { WISHLIST_ICON_MAP } from "../../lib/wishlistIconMap";
 
 type Props = {
   onClose: () => void;
@@ -30,28 +33,32 @@ type Props = {
 
 type FormData = {
   name: string;
+  icon: string;
   description: string;
   visibility: WishlistVisibility;
   hideClaimsFromOwner: boolean;
 };
 
-const defaultFormData: FormData = {
-  name: "",
-  description: "",
-  visibility: "private",
-  hideClaimsFromOwner: true,
-};
+const randomIcon = () =>
+  WISHLIST_ICONS[Math.floor(Math.random() * WISHLIST_ICONS.length)];
 
 const WishlistModal = ({ onClose, mode, wishlist, onAdd, onUpdate }: Props) => {
   const [formData, setFormData] = useState<FormData>(
     mode === "edit"
       ? {
           name: wishlist.name,
+          icon: wishlist.icon,
           description: wishlist.description ?? "",
           visibility: wishlist.visibility,
           hideClaimsFromOwner: wishlist.hideClaimsFromOwner,
         }
-      : defaultFormData,
+      : {
+          name: "",
+          icon: randomIcon(),
+          description: "",
+          visibility: "private",
+          hideClaimsFromOwner: true,
+        },
   );
   const [error, setError] = useState<boolean>(false);
 
@@ -69,12 +76,19 @@ const WishlistModal = ({ onClose, mode, wishlist, onAdd, onUpdate }: Props) => {
 
     onAdd({
       name: formData.name,
+      icon: formData.icon,
       description: formData.description || undefined,
       visibility: formData.visibility,
       hideClaimsFromOwner: formData.hideClaimsFromOwner,
     });
 
-    setFormData(defaultFormData);
+    setFormData({
+      name: "",
+      icon: randomIcon(),
+      description: "",
+      visibility: "private",
+      hideClaimsFromOwner: true,
+    });
     onClose();
   };
 
@@ -91,6 +105,14 @@ const WishlistModal = ({ onClose, mode, wishlist, onAdd, onUpdate }: Props) => {
             Please fill all fields
           </div>
         )}
+        <div className={styles.iconRow}>
+          <IconPicker
+            icons={WISHLIST_ICONS}
+            iconMap={WISHLIST_ICON_MAP}
+            value={formData.icon}
+            onChange={(slug) => setFormData({ ...formData, icon: slug })}
+          />
+        </div>
         <Input
           label="Name:"
           type="text"

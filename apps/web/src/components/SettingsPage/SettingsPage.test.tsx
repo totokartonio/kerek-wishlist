@@ -1,4 +1,5 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
+import { renderWithClient } from "../../test/utils";
 import userEvent from "@testing-library/user-event";
 import { describe, test, expect, vi, beforeEach } from "vitest";
 import { SettingsPage } from "./SettingsPage";
@@ -13,6 +14,8 @@ vi.mock("../../lib/auth-client", () => ({
     deleteUser: vi.fn(),
   },
 }));
+
+vi.mock("../../api/users", () => ({ getUser: vi.fn(), updateAvatar: vi.fn() }));
 
 vi.mock("./atoms/Account", () => ({
   default: ({
@@ -105,15 +108,15 @@ beforeEach(() => {
 });
 
 describe("SettingsPage", () => {
-  test("renders Settings heading", () => {
-    render(<SettingsPage />);
+  test("renderWithClients Settings heading", () => {
+    renderWithClient(<SettingsPage />);
     expect(
       screen.getByRole("heading", { name: "Settings" }),
     ).toBeInTheDocument();
   });
 
   test("passes current name and email to Account", () => {
-    render(<SettingsPage />);
+    renderWithClient(<SettingsPage />);
     expect(screen.getByTestId("current-name")).toHaveTextContent("Test User");
     expect(screen.getByTestId("current-email")).toHaveTextContent(
       "test@test.com",
@@ -121,13 +124,13 @@ describe("SettingsPage", () => {
   });
 
   test("no message shown initially", () => {
-    render(<SettingsPage />);
+    renderWithClient(<SettingsPage />);
     expect(screen.queryByRole("paragraph")).not.toBeInTheDocument();
   });
 
   test("handleChangeName shows success message on success", async () => {
     const user = userEvent.setup();
-    render(<SettingsPage />);
+    renderWithClient(<SettingsPage />);
 
     await user.click(screen.getByRole("button", { name: "Change Name" }));
 
@@ -141,7 +144,7 @@ describe("SettingsPage", () => {
       error: { message: "Update failed" },
     } as never);
     const user = userEvent.setup();
-    render(<SettingsPage />);
+    renderWithClient(<SettingsPage />);
 
     await user.click(screen.getByRole("button", { name: "Change Name" }));
 
@@ -152,7 +155,7 @@ describe("SettingsPage", () => {
 
   test("handleChangeEmail shows error when email is empty", async () => {
     const user = userEvent.setup();
-    render(<SettingsPage />);
+    renderWithClient(<SettingsPage />);
 
     await user.click(
       screen.getByRole("button", { name: "Change Email Empty" }),
@@ -171,7 +174,7 @@ describe("SettingsPage", () => {
     });
 
     const user = userEvent.setup();
-    render(<SettingsPage />);
+    renderWithClient(<SettingsPage />);
 
     await user.click(screen.getByRole("button", { name: "Change Email" }));
 
@@ -192,7 +195,7 @@ describe("SettingsPage", () => {
       error: { message: "Email change failed" },
     } as never);
     const user = userEvent.setup();
-    render(<SettingsPage />);
+    renderWithClient(<SettingsPage />);
 
     await user.click(screen.getByRole("button", { name: "Change Email" }));
 
@@ -209,7 +212,7 @@ describe("SettingsPage", () => {
     });
 
     const user = userEvent.setup();
-    render(<SettingsPage />);
+    renderWithClient(<SettingsPage />);
 
     await user.click(screen.getByRole("button", { name: "Change Password" }));
 
@@ -230,7 +233,7 @@ describe("SettingsPage", () => {
       error: { message: "Wrong password" },
     } as never);
     const user = userEvent.setup();
-    render(<SettingsPage />);
+    renderWithClient(<SettingsPage />);
 
     await user.click(screen.getByRole("button", { name: "Change Password" }));
 
@@ -247,7 +250,7 @@ describe("SettingsPage", () => {
     });
 
     const user = userEvent.setup();
-    render(<SettingsPage />);
+    renderWithClient(<SettingsPage />);
 
     await user.click(screen.getByRole("button", { name: "Delete Account" }));
 
@@ -266,7 +269,7 @@ describe("SettingsPage", () => {
       error: { message: "Delete failed" },
     } as never);
     const user = userEvent.setup();
-    render(<SettingsPage />);
+    renderWithClient(<SettingsPage />);
 
     await user.click(screen.getByRole("button", { name: "Delete Account" }));
 
@@ -277,7 +280,7 @@ describe("SettingsPage", () => {
 
   test("setMessage passed to Account displays message in SettingsPage", async () => {
     const user = userEvent.setup();
-    render(<SettingsPage />);
+    renderWithClient(<SettingsPage />);
 
     await user.click(screen.getByRole("button", { name: "Set Error Message" }));
 

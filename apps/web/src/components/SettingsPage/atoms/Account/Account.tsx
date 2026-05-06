@@ -6,12 +6,18 @@ import Card from "../../../ui/Card";
 import Input from "../../../ui/Input";
 import { Button } from "../../../ui/Button/Button";
 import { checkEmail } from "../../../../api/users";
+import Avatar from "../../../ui/Avatar";
+import IconPicker from "../../../ui/IconPicker";
+import { AVATAR_ICONS } from "@wishlist/icons";
+import { AVATAR_ICON_MAP } from "../../../../lib/avatarIconMap";
 
 type Props = {
   currentName: string | undefined;
   currentEmail: string | undefined;
+  currentAvatar: string | null;
   onChangeName: (name: string | undefined) => void;
   onChangeEmail: (email: string | undefined) => void;
+  onChangeAvatar: (avatar: string) => void;
   setMessage: (message: Message) => void;
 };
 
@@ -20,8 +26,10 @@ type ModalMode = "name" | "email" | null;
 const Account = ({
   currentEmail,
   currentName,
+  currentAvatar,
   onChangeName,
   onChangeEmail,
+  onChangeAvatar,
   setMessage,
 }: Props) => {
   const [name, setName] = useState(currentName);
@@ -51,6 +59,7 @@ const Account = ({
     onChangeName(name);
     setModalMode(null);
   };
+
   const handleChangeEmail = (email: string | undefined) => {
     onChangeEmail(email);
     setModalMode(null);
@@ -60,6 +69,17 @@ const Account = ({
     <section className={styles.section}>
       <h2>Account</h2>
       <Card variant="flat" color="primary" className={styles.card}>
+        <div className={styles.avatarRow}>
+          <IconPicker
+            icons={AVATAR_ICONS}
+            iconMap={AVATAR_ICON_MAP}
+            value={currentAvatar ?? AVATAR_ICONS[0]}
+            onChange={onChangeAvatar}
+            triggerContent={<Avatar avatar={currentAvatar} size={72} />}
+            placement="left"
+          />
+          <p className={styles.avatarHint}>Click to change your avatar</p>
+        </div>
         <form
           id="name"
           name="name"

@@ -20,20 +20,52 @@
 
 .card {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: var(--spacing-md);
   color: white;
+  padding: var(--spacing-lg);
   height: 130px;
 }
 
-.innerContainer {
+.iconCircle {
+  flex-shrink: 0;
+  width: 60px;
+  height: 60px;
+  border-radius: var(--radius-full);
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  box-shadow: var(--shadow-inset-md);
+
+  &.primary {
+    background-color: var(--color-surface-primary);
+  }
+
+  &.secondary {
+    background-color: var(--color-surface-secondary);
+  }
+}
+
+.icon {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: var(--spacing-xs);
+  min-width: 0;
 }
 
 .heading {
-  font-size: var(--font-size-md);
+  font-size: var(--font-size-lg);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
 }
 
 .description {
@@ -41,18 +73,32 @@
   font-size: var(--font-size-sm);
   overflow: hidden;
   display: -webkit-box;
-  line-clamp: 1;
-  -webkit-line-clamp: 1;
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+  flex: 1;
+}
+
+.footer {
+  margin-top: auto;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .skeletonCard {
-  padding: var(--spacing-2xl);
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: var(--spacing-md);
-  color: white;
+  padding: var(--spacing-lg);
   height: 130px;
+}
+
+.skeletonCircle {
+  flex-shrink: 0;
+  width: 60px;
+  height: 60px;
+  border-radius: var(--radius-full);
+  animation: colorShift 1500ms infinite alternate;
 }
 
 .skeletonHeading {

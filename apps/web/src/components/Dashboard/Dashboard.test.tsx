@@ -29,6 +29,7 @@ const mockWishlist = {
   updatedAt: "2024-01-01",
   role: "owner" as const,
   hideClaimsFromOwner: true,
+  icon: "star",
 };
 
 beforeEach(() => {
