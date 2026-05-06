@@ -1,4 +1,5 @@
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
+import { renderWithClient } from "../../test/utils";
 import userEvent from "@testing-library/user-event";
 import { describe, test, expect, vi, beforeEach } from "vitest";
 import { Header } from "./Header";
@@ -7,6 +8,15 @@ vi.mock("../../lib/auth-client", () => ({
   useSession: vi.fn(),
   signOut: vi.fn(),
 }));
+
+vi.mock("../../api/users", () => ({
+  getUser: vi
+    .fn()
+    .mockResolvedValue({ id: "1", name: "Test User", avatar: null }),
+  updateAvatar: vi.fn(),
+}));
+
+vi.mock("../../api/users", () => ({ getUser: vi.fn() }));
 
 vi.mock("@tanstack/react-router", async (importOriginal) => {
   const actual = (await importOriginal()) as Record<string, unknown>;
@@ -82,16 +92,16 @@ beforeEach(() => {
 });
 
 describe("Header", () => {
-  test("renders logo image", () => {
+  test("renderWithClients logo image", () => {
     vi.mocked(useSession).mockReturnValue(mockSessionLoggedOut);
-    render(<Header />);
+    renderWithClient(<Header />);
 
     expect(screen.getByAltText("Kérek")).toBeInTheDocument();
   });
 
   test("shows Log in link when not logged in", () => {
     vi.mocked(useSession).mockReturnValue(mockSessionLoggedOut);
-    render(<Header />);
+    renderWithClient(<Header />);
 
     expect(screen.getByRole("link", { name: "Log in" })).toBeInTheDocument();
     expect(screen.queryByText("Test User")).not.toBeInTheDocument();
@@ -99,7 +109,7 @@ describe("Header", () => {
 
   test("shows username as dropdown trigger when logged in", () => {
     vi.mocked(useSession).mockReturnValue(mockSessionLoggedIn);
-    render(<Header />);
+    renderWithClient(<Header />);
 
     expect(screen.getByText("Test User")).toBeInTheDocument();
     expect(
@@ -110,7 +120,7 @@ describe("Header", () => {
   test("clicking username opens dropdown with nav items", async () => {
     vi.mocked(useSession).mockReturnValue(mockSessionLoggedIn);
     const user = userEvent.setup();
-    render(<Header />);
+    renderWithClient(<Header />);
 
     await user.click(screen.getByText("Test User"));
 
@@ -126,7 +136,7 @@ describe("Header", () => {
   test("clicking Log out in dropdown shows confirmation modal", async () => {
     vi.mocked(useSession).mockReturnValue(mockSessionLoggedIn);
     const user = userEvent.setup();
-    render(<Header />);
+    renderWithClient(<Header />);
 
     await user.click(screen.getByText("Test User"));
     await user.click(screen.getByRole("button", { name: /log out/i }));
@@ -139,7 +149,7 @@ describe("Header", () => {
   test("modal cancel closes without logging out", async () => {
     vi.mocked(useSession).mockReturnValue(mockSessionLoggedIn);
     const user = userEvent.setup();
-    render(<Header />);
+    renderWithClient(<Header />);
 
     await user.click(screen.getByText("Test User"));
     await user.click(screen.getByRole("button", { name: /log out/i }));
@@ -162,7 +172,7 @@ describe("Header", () => {
       value: { href: "" },
     });
 
-    render(<Header />);
+    renderWithClient(<Header />);
 
     await user.click(screen.getByText("Test User"));
     await user.click(screen.getByRole("button", { name: /log out/i }));

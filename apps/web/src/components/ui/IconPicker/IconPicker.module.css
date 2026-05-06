@@ -1,0 +1,98 @@
+.container {
+  position: relative;
+  display: inline-block;
+}
+
+.trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 96px;
+  height: 96px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-neutral-100);
+  border: 1px solid var(--color-neutral-200);
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  transition: border-color 0.15s ease;
+
+  &:hover {
+    outline: 2px solid var(--color-pink-200);
+    outline-offset: -1px;
+  }
+
+  &:focus {
+    outline: 2px solid var(--color-pink-400);
+    outline-offset: -1px;
+  }
+}
+
+.customTrigger {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.triggerIcon {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+}
+
+.grid {
+  position: absolute;
+  top: calc(100% + var(--spacing-sm));
+  z-index: 100;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: var(--spacing-xs);
+  padding: var(--spacing-md);
+  background-color: var(--color-background);
+  border: 1px solid var(--color-neutral-200);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  max-height: 300px;
+  overflow-y: auto;
+  width: 320px;
+
+  &.center {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  &.left {
+    left: 0;
+  }
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-sm);
+  border: 2px solid transparent;
+  background: none;
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  transition: background-color 0.1s ease;
+
+  &:hover {
+    background-color: var(--color-neutral-100);
+  }
+
+  &.selected {
+    border-color: var(--color-primary);
+    background-color: var(--color-surface-primary);
+  }
+}
+
+.icon {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}

@@ -30,3 +30,13 @@ export const checkEmail = async (
   );
   return handleResponse<{ taken: boolean }>(response);
 };
+
+export const updateAvatar = async (avatar: string): Promise<UserProfile> => {
+  const response = await fetch(`${BASE_URL}/api/users/me`, {
+    credentials: "include",
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ avatar }),
+  });
+  return handleResponse<UserProfile>(response);
+};

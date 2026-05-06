@@ -16,6 +16,7 @@ model User {
   email         String    @unique
   emailVerified Boolean   @default(false)
   image         String?
+  avatar        String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
@@ -69,6 +70,7 @@ model Verification {
 model Wishlist {
   id        String   @id @default(uuid())
   name      String
+  icon      String
   description     String?
   visibility    String   @default("private")
   ownerId      String

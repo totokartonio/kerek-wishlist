@@ -26,6 +26,7 @@ import { PlusIcon } from "@phosphor-icons/react";
 import ItemsView from "./atoms/ItemsView";
 import { useItemFilters } from "../../hooks/items/useItemsFilters";
 import { useFilteredItems } from "../../hooks/items/useFilteredItems";
+import { WISHLIST_ICON_MAP } from "../../lib/wishlistIconMap";
 
 type Props = {
   wishlistId: string;
@@ -208,7 +209,16 @@ const WishlistPage = ({ wishlistId }: Props) => {
   return (
     <div className={styles.wrapper}>
       <div className={styles.header}>
-        <h1 className={styles.name}>{wishlist.name}</h1>
+        <div className={styles.nameWrapper}>
+          <div className={styles.iconCircle}>
+            <img
+              src={WISHLIST_ICON_MAP[wishlist.icon]}
+              alt={wishlist.icon.replace(/_/g, " ")}
+              className={styles.icon}
+            />
+          </div>
+          <h1 className={styles.name}>{wishlist.name}</h1>
+        </div>
         <button
           onClick={() => setShowSidebar(true)}
           className={styles.iconButton}

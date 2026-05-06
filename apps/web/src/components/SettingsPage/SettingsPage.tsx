@@ -4,6 +4,8 @@ import { useSession, signOut } from "../../lib/auth-client";
 import { authClient } from "../../lib/auth-client";
 import Account from "./atoms/Account";
 import Security from "./atoms/Security";
+import { useGetUser } from "../../hooks/users/useGetUser";
+import { useUpdateAvatar } from "../../hooks/users/useUpdateAvatar";
 
 export type Message = { text: string; type: "success" | "error" } | null;
 
@@ -12,6 +14,9 @@ const SettingsPage = () => {
   const userName = session?.user.name;
   const userEmail = session?.user.email;
   const [message, setMessage] = useState<Message>(null);
+
+  const { data: user } = useGetUser(session?.user.id ?? "", !!session);
+  const { mutate: updateAvatar } = useUpdateAvatar();
 
   const handleChangeName = async (name: string | undefined) => {
     const { error } = await authClient.updateUser({ name });
@@ -28,10 +33,7 @@ const SettingsPage = () => {
 
   const handleChangeEmail = async (email: string | undefined) => {
     if (!email) {
-      setMessage({
-        text: "Failed to change email",
-        type: "error",
-      });
+      setMessage({ text: "Failed to change email", type: "error" });
       setTimeout(() => setMessage(null), 3000);
       return;
     }
@@ -63,15 +65,12 @@ const SettingsPage = () => {
     newPassword: string | undefined,
   ) => {
     if (!currentPassword || !newPassword) {
-      setMessage({
-        text: "Failed to change password",
-        type: "error",
-      });
+      setMessage({ text: "Failed to change password", type: "error" });
       return;
     }
     const { error } = await authClient.changePassword({
-      currentPassword: currentPassword,
-      newPassword: newPassword,
+      currentPassword,
+      newPassword,
     });
     if (error) {
       setMessage({
@@ -84,6 +83,16 @@ const SettingsPage = () => {
       await signOut();
       window.location.href = "/login";
     }
+    setTimeout(() => setMessage(null), 3000);
+  };
+
+  const handleChangeAvatar = (avatar: string) => {
+    updateAvatar(avatar, {
+      onSuccess: () =>
+        setMessage({ text: "Avatar successfully changed", type: "success" }),
+      onError: () =>
+        setMessage({ text: "Failed to change avatar", type: "error" }),
+    });
     setTimeout(() => setMessage(null), 3000);
   };
 
@@ -105,9 +114,7 @@ const SettingsPage = () => {
       <h1>Settings</h1>
       {message && (
         <p
-          className={`${styles.message}
-            ${message.type === "success" ? styles.success : styles.error}
-          `}
+          className={`${styles.message} ${message.type === "success" ? styles.success : styles.error}`}
         >
           {message.text}
         </p>
@@ -115,8 +122,10 @@ const SettingsPage = () => {
       <Account
         currentName={userName}
         currentEmail={userEmail}
-        onChangeEmail={handleChangeEmail}
+        currentAvatar={user?.avatar ?? null}
         onChangeName={handleChangeName}
+        onChangeEmail={handleChangeEmail}
+        onChangeAvatar={handleChangeAvatar}
         setMessage={setMessage}
       />
       <Security

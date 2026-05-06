@@ -10,6 +10,7 @@ import type { AuthVariables } from "../middleware/auth";
 import { getWishlistWithRole } from "../lib/wishlistAccess";
 import { auth } from "../auth";
 import { deleteAnonymousUser } from "../lib/deleteAnonymousUser";
+import { WISHLIST_ICONS } from "@wishlist/icons";
 
 const wishlists = new Hono<{ Variables: AuthVariables }>();
 
@@ -80,9 +81,14 @@ wishlists.post("/", async (c) => {
       return c.json({ error: "Invalid visibility" }, 400);
     }
 
+    if (!WISHLIST_ICONS.includes(body.icon)) {
+      return c.json({ error: "Invalid icon" }, 400);
+    }
+
     const wishlist = await prisma.wishlist.create({
       data: {
         name: body.name,
+        icon: body.icon,
         description: body.description,
         visibility: body.visibility || "private",
         hideClaimsFromOwner: body.hideClaimsFromOwner,
@@ -119,6 +125,9 @@ wishlists.patch("/:wishlistId", async (c) => {
       !WISHLIST_VISIBILITY.includes(body.visibility)
     ) {
       return c.json({ error: "Invalid visibility" }, 400);
+    }
+    if (body.icon && !WISHLIST_ICONS.includes(body.icon)) {
+      return c.json({ error: "Invalid icon" }, 400);
     }
 
     const isGoingPrivate =

@@ -10,6 +10,7 @@ export const useUpdateWishlist = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["wishlists"] });
       queryClient.invalidateQueries({ queryKey: ["items"] });
+      queryClient.invalidateQueries({ queryKey: ["wishlist"] });
     },
   });
 };

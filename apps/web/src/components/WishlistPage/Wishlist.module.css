@@ -14,6 +14,31 @@
   justify-content: space-between;
 }
 
+.nameWrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+}
+
+.iconCircle {
+  flex-shrink: 0;
+  width: 72px;
+  height: 72px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-md);
+  background-color: var(--color-neutral-100);
+  border: 1px solid var(--color-neutral-200);
+}
+
+.icon {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
 .name {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -29,6 +54,7 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-xs);
+  flex-shrink: 0;
 
   &:hover {
     color: var(--color-neutral-300);
@@ -52,5 +78,19 @@
   .iconButton svg {
     width: 30px;
     height: 30px;
+  }
+
+  .nameWrapper {
+    gap: var(--spacing-md);
+  }
+
+  .iconCircle {
+    height: 56px;
+    width: 56px;
+  }
+
+  .icon {
+    height: 36px;
+    width: 36px;
   }
 }

@@ -20,6 +20,7 @@ const mockWishlist = {
   createdAt: "2024-01-01",
   updatedAt: "2024-01-01",
   hideClaimsFromOwner: true,
+  icon: "star",
 };
 
 describe("WishlistModal", () => {

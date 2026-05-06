@@ -9,6 +9,7 @@ import { WishlistGridSkeleton } from "../WishlistsGrid/WishlistGridSkeleton";
 import ErrorMessage from "../ui/ErrorMessage";
 import { LinkButton } from "../ui/Button/LinkButton";
 import Skeleton from "../ui/Skeleton";
+import Avatar from "../ui/Avatar";
 
 type Props = {
   userId: string;
@@ -68,7 +69,10 @@ const UserProfilePage = ({ userId }: Props) => {
 
   return (
     <div className={styles.wrapper}>
-      <h1 className={styles.name}>{user.name}</h1>
+      <div className={styles.nameWrapper}>
+        <Avatar avatar={user.avatar ?? null} size={48} />
+        <h1 className={styles.name}>{user.name}</h1>
+      </div>
       <section className={styles.section}>
         <h2>Wishlists</h2>
         {wishlists && wishlists.length > 0 ? (

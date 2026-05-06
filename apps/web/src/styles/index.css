@@ -157,6 +157,11 @@
   --shadow-inset-sm:
     inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.15);
 
+  --shadow-inset-md:
+    inset 0 3px 8px rgba(0, 0, 0, 0.12),
+    inset 0 -3px 8px rgba(255, 255, 255, 0.5),
+    inset 3px 0 8px rgba(0, 0, 0, 0.06), inset -3px 0 8px rgba(0, 0, 0, 0.06);
+
   --shadow-focus: 0 0 0 3px rgba(0, 0, 0, 0.12);
 
   /* Breakpoints */

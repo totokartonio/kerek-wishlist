@@ -12,9 +12,12 @@ const WishlistGridSkeleton = () => {
           className={styles.skeletonCard}
           borderRadius="var(--radius-xl)"
         >
-          <div className={styles.innerContainer}>
+          <span className={styles.skeletonCircle} />
+          <div className={styles.content}>
             <span className={styles.skeletonHeading} />
-            <Badge variant="neutral" className={styles.skeletonBadge} />
+            <div className={styles.footer}>
+              <Badge variant="neutral" className={styles.skeletonBadge} />
+            </div>
           </div>
         </Skeleton>
       ))}

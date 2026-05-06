@@ -3,6 +3,7 @@ import { anonymous } from "better-auth/plugins";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { PrismaClient } from "@wishlist/database/generated/prisma/client";
 import { PrismaLibSql } from "@prisma/adapter-libsql";
+import { AVATAR_ICONS } from "@wishlist/icons";
 
 const adapter = new PrismaLibSql({
   url: process.env.DATABASE_URL || "",
@@ -39,6 +40,22 @@ export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "sqlite",
   }),
+  databaseHooks: {
+    user: {
+      create: {
+        before: async (user) => {
+          const randomAvatar =
+            AVATAR_ICONS[Math.floor(Math.random() * AVATAR_ICONS.length)];
+          return {
+            data: {
+              ...user,
+              avatar: randomAvatar,
+            },
+          };
+        },
+      },
+    },
+  },
   plugins: [
     anonymous({
       onLinkAccount: async ({ anonymousUser, newUser }) => {

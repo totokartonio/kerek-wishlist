@@ -61,6 +61,7 @@ const mockWishlist = {
   updatedAt: "2024-01-01",
   role: "owner" as const,
   hideClaimsFromOwner: true,
+  icon: "star",
 };
 
 const mockItem = {
@@ -104,7 +105,11 @@ beforeEach(() => {
   vi.mocked(updateItem).mockResolvedValue(mockItem);
   vi.mocked(createItem).mockResolvedValue(mockItem);
   vi.mocked(getWishlist).mockResolvedValue(mockWishlist);
-  vi.mocked(getUser).mockResolvedValue({ id: "user-1", name: "Test User" });
+  vi.mocked(getUser).mockResolvedValue({
+    id: "user-1",
+    name: "Test User",
+    avatar: null,
+  });
   vi.mocked(getCollaborators).mockResolvedValue([]);
 });
 

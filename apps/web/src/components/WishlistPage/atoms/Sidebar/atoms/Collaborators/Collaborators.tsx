@@ -6,6 +6,7 @@ import styles from "./Collaborators.module.css";
 import { TrashIcon } from "@phosphor-icons/react/dist/csr/Trash";
 import Badge from "../../../../../ui/Badge";
 import { Button } from "../../../../../ui/Button/Button";
+import Avatar from "../../../../../ui/Avatar";
 
 type Props = {
   isOwner: boolean;
@@ -38,7 +39,12 @@ const Collaborators = ({
         <ul className={styles.list}>
           {collaborators.map((collaborator) => (
             <li key={collaborator.id} className={styles.listItem}>
-              <strong className={styles.name}>{collaborator.user.name}</strong>
+              <div className={styles.nameWrapper}>
+                <Avatar avatar={collaborator.user.avatar ?? null} size={48} />
+                <strong className={styles.name}>
+                  {collaborator.user.name}
+                </strong>
+              </div>
               {isOwner ? (
                 <RoleSelect
                   id={collaborator.id}

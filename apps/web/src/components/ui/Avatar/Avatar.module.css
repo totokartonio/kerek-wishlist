@@ -1,0 +1,21 @@
+.circle {
+  border-radius: var(--radius-full);
+  background-color: var(--color-neutral-100);
+  border: 1px solid var(--color-neutral-200);
+  box-shadow: var(--shadow-inset-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.image {
+  width: 75%;
+  height: 75%;
+  object-fit: contain;
+}
+
+.fallback {
+  color: var(--color-neutral-400);
+}

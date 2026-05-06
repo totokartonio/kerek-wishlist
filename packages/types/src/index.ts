@@ -43,6 +43,7 @@ export type WishlistVisibility = (typeof WISHLIST_VISIBILITY)[number];
 export type Wishlist = {
   id: string;
   name: string;
+  icon: string;
   description: string | null;
   visibility: WishlistVisibility;
   ownerId: string;
@@ -59,6 +60,7 @@ export type WishlistWithRole = Wishlist & {
 
 export type CreateWishlistDto = {
   name: string;
+  icon: string;
   description?: string;
   visibility?: WishlistVisibility;
   hideClaimsFromOwner?: boolean;
@@ -75,6 +77,7 @@ export type Collaborator = {
     id: string;
     email: string;
     name: string;
+    avatar: string | null;
   };
 };
 
@@ -96,7 +99,7 @@ export type InviteWithWishlist = InviteLink & {
   };
 };
 
-export type UserProfile = { id: string; name: string };
+export type UserProfile = { id: string; name: string; avatar: string | null };
 
 export type ModalMode =
   | "addItem"

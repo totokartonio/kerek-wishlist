@@ -8,6 +8,12 @@
   gap: var(--spacing-2xl);
 }
 
+.nameWrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+}
+
 .name {
   overflow: hidden;
   text-overflow: ellipsis;
