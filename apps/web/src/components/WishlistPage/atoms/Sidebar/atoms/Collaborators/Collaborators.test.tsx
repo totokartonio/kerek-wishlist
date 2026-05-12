@@ -11,9 +11,19 @@ vi.mock("../../../../../../hooks/collaborators/useRemoveCollaborator", () => ({
 vi.mock("../../../../../../hooks/collaborators/useUpdateCollaborator", () => ({
   useUpdateCollaborator: vi.fn(),
 }));
+vi.mock("@tanstack/react-router", async (importOriginal) => {
+  const actual = (await importOriginal()) as Record<string, unknown>;
+  return {
+    ...actual,
+    Link: ({ children, to }: { children: React.ReactNode; to: string }) => (
+      <a href={to}>{children}</a>
+    ),
+  };
+});
 
 const mockRemove = vi.fn();
 const mockUpdate = vi.fn();
+const mockOnLeave = vi.fn();
 
 const mockCollaborators = [
   {
@@ -21,18 +31,29 @@ const mockCollaborators = [
     userId: "user-2",
     wishlistId: "wishlist-1",
     role: "viewer" as const,
-    user: { id: "user-2", name: "Jane Doe", email: "jane@example.com" },
+    user: {
+      id: "user-2",
+      name: "Jane Doe",
+      email: "jane@example.com",
+      avatar: null,
+    },
   },
   {
     id: "collab-2",
     userId: "user-3",
     wishlistId: "wishlist-1",
     role: "editor" as const,
-    user: { id: "user-3", name: "John Smith", email: "john@example.com" },
+    user: {
+      id: "user-3",
+      name: "John Smith",
+      email: "john@example.com",
+      avatar: null,
+    },
   },
 ];
 
 beforeEach(() => {
+  vi.clearAllMocks();
   vi.mocked(useRemoveCollaborator).mockReturnValue({
     mutate: mockRemove,
   } as unknown as ReturnType<typeof useRemoveCollaborator>);
@@ -48,6 +69,7 @@ describe("Collaborators", () => {
         isOwner={true}
         collaborators={[]}
         wishlistId="wishlist-1"
+        onLeave={mockOnLeave}
       />,
     );
     expect(screen.getByText("No collaborators added")).toBeInTheDocument();
@@ -59,6 +81,7 @@ describe("Collaborators", () => {
         isOwner={false}
         collaborators={mockCollaborators}
         wishlistId="wishlist-1"
+        onLeave={mockOnLeave}
       />,
     );
     expect(screen.getByText("Jane Doe")).toBeInTheDocument();
@@ -71,6 +94,7 @@ describe("Collaborators", () => {
         isOwner={true}
         collaborators={mockCollaborators}
         wishlistId="wishlist-1"
+        onLeave={mockOnLeave}
       />,
     );
     const deleteButtons = screen.getAllByRole("button", { name: "Delete" });
@@ -83,6 +107,7 @@ describe("Collaborators", () => {
         isOwner={false}
         collaborators={mockCollaborators}
         wishlistId="wishlist-1"
+        onLeave={mockOnLeave}
       />,
     );
     expect(
@@ -97,6 +122,7 @@ describe("Collaborators", () => {
         isOwner={true}
         collaborators={mockCollaborators}
         wishlistId="wishlist-1"
+        onLeave={mockOnLeave}
       />,
     );
     const deleteButtons = screen.getAllByRole("button", { name: "Delete" });
@@ -114,6 +140,7 @@ describe("Collaborators", () => {
         isOwner={true}
         collaborators={mockCollaborators}
         wishlistId="wishlist-1"
+        onLeave={mockOnLeave}
       />,
     );
     const selects = screen.getAllByRole("combobox", {
@@ -128,6 +155,7 @@ describe("Collaborators", () => {
         isOwner={false}
         collaborators={mockCollaborators}
         wishlistId="wishlist-1"
+        onLeave={mockOnLeave}
       />,
     );
     expect(
@@ -144,6 +172,7 @@ describe("Collaborators", () => {
         isOwner={true}
         collaborators={mockCollaborators}
         wishlistId="wishlist-1"
+        onLeave={mockOnLeave}
       />,
     );
     const selects = screen.getAllByRole("combobox", {

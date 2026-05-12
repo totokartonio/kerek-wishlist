@@ -2,7 +2,7 @@ import { useState } from "react";
 import { signIn, signUp } from "../../lib/auth-client";
 import { SignInForm } from "./atoms/SignInForm";
 import { SignUpForm } from "./atoms/SignUpForm";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, useSearch } from "@tanstack/react-router";
 import styles from "./Login.module.css";
 import Card from "../ui/Card";
 
@@ -20,7 +20,11 @@ const Login = () => {
     password: "",
     name: "",
   });
-  const [message, setMessage] = useState<Message>(null);
+
+  const { message: successParam } = useSearch({ from: "/login" });
+  const [message, setMessage] = useState<Message>(
+    successParam ? { type: "success", text: successParam } : null,
+  );
   const [fieldErrors, setFieldErrors] = useState({
     email: "",
     password: "",
@@ -51,43 +55,48 @@ const Login = () => {
     event.preventDefault();
     if (hasErrors()) return;
 
-    if (mode === "sign-in") {
-      const { error } = await signIn.email({
-        email: formData.email,
-        password: formData.password,
-      });
-      if (error)
-        setMessage({
-          type: "error",
-          text: error.message ?? "Failed to sign in",
+    try {
+      if (mode === "sign-in") {
+        const { error } = await signIn.email({
+          email: formData.email,
+          password: formData.password,
         });
-      else navigate({ to: "/dashboard" });
-    }
-
-    if (mode === "sign-up") {
-      const { error } = await signUp.email({
-        email: formData.email,
-        password: formData.password,
-        name: formData.name,
-      });
-      if (error)
-        setMessage({
-          type: "error",
-          text: error.message ?? "Failed to sign up",
-        });
-      else {
-        setMode("sign-in");
-        setFormData((prev) => ({ ...prev, password: "" }));
-        setFieldErrors({ email: "", password: "", name: "" });
-        setMessage({
-          type: "success",
-          text: "Account created! Please sign in.",
-        });
+        if (error)
+          setMessage({
+            type: "error",
+            text: error.message ?? "Failed to sign in",
+          });
+        else navigate({ to: "/dashboard" });
       }
+
+      if (mode === "sign-up") {
+        const { error } = await signUp.email({
+          email: formData.email,
+          password: formData.password,
+          name: formData.name,
+        });
+        if (error)
+          setMessage({
+            type: "error",
+            text: error.message ?? "Failed to sign up",
+          });
+        else {
+          navigate({
+            to: "/login",
+            search: { message: "Account created! Please sign in." },
+          });
+        }
+      }
+    } catch {
+      setMessage({
+        type: "error",
+        text: "Connection failed. Please check your internet connection.",
+      });
     }
   };
 
   const hanldeChangeMode = () => {
+    setMessage(null);
     if (mode === "sign-in") setMode("sign-up");
     if (mode === "sign-up") setMode("sign-in");
   };

@@ -86,7 +86,11 @@ const SignInForm = ({
           Sign In
         </Button>
       </form>
-      {message && <div className={styles[message.type]}>{message.text}</div>}
+      {message && (
+        <div className={`${styles.message} ${styles[message.type]}`}>
+          {message.text}
+        </div>
+      )}
       <a href="#" data-testid="change-password">
         Forgot password?
       </a>

@@ -11,6 +11,10 @@
   background-color: var(--color-primary);
   box-shadow: var(--shadow-primary);
   color: white;
+  transition:
+    transform var(--duration-instant) var(--ease-in),
+    filter var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
 
   &:active {
     box-shadow: var(--shadow-primary-active);

@@ -17,8 +17,6 @@ import { Button } from "../ui/Button/Button";
 import ConfirmationModal from "../ui/ConfirmationModal";
 import { GearIcon } from "@phosphor-icons/react/dist/csr/Gear";
 import type { Wishlist } from "@wishlist/types";
-import ErrorMessage from "../ui/ErrorMessage";
-import { LinkButton } from "../ui/Button/LinkButton";
 import { ItemsTableSkeleton } from "./atoms/ItemsTable/ItemsTableSkeleton";
 import Skeleton from "../ui/Skeleton";
 import FAB from "../ui/FAB";
@@ -27,6 +25,11 @@ import ItemsView from "./atoms/ItemsView";
 import { useItemFilters } from "../../hooks/items/useItemsFilters";
 import { useFilteredItems } from "../../hooks/items/useFilteredItems";
 import { WISHLIST_ICON_MAP } from "../../lib/wishlistIconMap";
+import AccessDenied from "../AccessDenied";
+import NotFound from "../NotFound";
+import ErrorPage from "../ErrorPage";
+import startYourTask from "../../assets/illustrations/start-your-task.png";
+import EmptyState from "../EmptyState";
 
 type Props = {
   wishlistId: string;
@@ -113,80 +116,40 @@ const WishlistPage = ({ wishlistId }: Props) => {
 
   if (isWishlistError) {
     if (wishlistError instanceof ApiError && wishlistError.status === 403) {
-      return (
-        <div className={styles.wrapper}>
-          <ErrorMessage
-            title="Access Denied"
-            message="You don't have access to this wishlist."
-            action={
-              <LinkButton variant="ghost" color="primary" to="/dashboard">
-                Go Back
-              </LinkButton>
-            }
-          />
-        </div>
-      );
+      return <AccessDenied message="You don't have access to this wishlist." />;
     }
 
     if (wishlistError instanceof ApiError && wishlistError.status === 404) {
       return (
-        <div className={styles.wrapper}>
-          <ErrorMessage
-            title="Something went wrong"
-            message="Wishlist not found."
-            action={
-              <LinkButton variant="ghost" color="primary" to="/dashboard">
-                Go Back
-              </LinkButton>
-            }
-          />
-        </div>
+        <NotFound
+          title="Wishlist not found"
+          message="This wishlist doesn't exist or may have been deleted."
+        />
       );
     }
 
     return (
-      <div className={styles.wrapper}>
-        <ErrorMessage
-          title="Something went wrong"
-          message="Can't load this wishlist now. Try again later."
-          action={
-            <LinkButton variant="ghost" color="primary" to="/dashboard">
-              Go Back
-            </LinkButton>
-          }
-        />
-      </div>
+      <ErrorPage
+        title="Something went wrong"
+        message="Can't load this wishlist now. Try again later."
+      />
     );
   }
 
   if (isError)
     return (
-      <div className={styles.wrapper}>
-        <ErrorMessage
-          title="Something went wrong"
-          message="Can't load this wishlist now. Try again later."
-          action={
-            <LinkButton variant="ghost" color="primary" to="/dashboard">
-              Go Back
-            </LinkButton>
-          }
-        />
-      </div>
+      <ErrorPage
+        title="Something went wrong"
+        message="Can't load this wishlist now. Try again later."
+      />
     );
 
   if (!wishlist)
     return (
-      <div className={styles.wrapper}>
-        <ErrorMessage
-          title="Something went wrong"
-          message="Wishlist not found."
-          action={
-            <LinkButton variant="ghost" color="primary" to="/dashboard">
-              Go Back
-            </LinkButton>
-          }
-        />
-      </div>
+      <NotFound
+        title="Wishlist not found"
+        message="This wishlist doesn't exist or may have been deleted."
+      />
     );
 
   const showClaim = !isOwner || !wishlist.hideClaimsFromOwner;
@@ -266,7 +229,15 @@ const WishlistPage = ({ wishlistId }: Props) => {
           />
         </>
       ) : (
-        <p className={styles.emptyState}>No wishes yet.</p>
+        <EmptyState
+          illustration={startYourTask}
+          title="No wishes yet"
+          message={
+            canEdit
+              ? "Add your first wish to get started."
+              : "This wishlist is empty."
+          }
+        />
       )}
       {showSidebar && (
         <Sidebar

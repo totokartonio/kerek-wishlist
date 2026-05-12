@@ -8,12 +8,17 @@ vi.mock("../../lib/auth-client", () => ({
   signUp: { email: vi.fn() },
 }));
 
-vi.mock("@tanstack/react-router", () => ({
-  useNavigate: () => mockNavigate,
-  Link: ({ children, to }: { children: React.ReactNode; to: string }) => (
-    <a href={to}>{children}</a>
-  ),
-}));
+vi.mock("@tanstack/react-router", async (importOriginal) => {
+  const actual = (await importOriginal()) as Record<string, unknown>;
+  return {
+    ...actual,
+    useNavigate: () => mockNavigate,
+    useSearch: () => ({ message: undefined }),
+    Link: ({ children, to }: { children: React.ReactNode; to: string }) => (
+      <a href={to}>{children}</a>
+    ),
+  };
+});
 
 const mockNavigate = vi.fn();
 
@@ -70,7 +75,7 @@ describe("Login", () => {
     expect(await screen.findByText("Invalid credentials")).toBeInTheDocument();
   });
 
-  test("shows success message after sign-up", async () => {
+  test("navigates to login with success message after sign-up", async () => {
     vi.mocked(signUp.email).mockResolvedValue({ error: null, data: {} });
 
     const user = userEvent.setup();
@@ -82,9 +87,10 @@ describe("Login", () => {
     await user.type(screen.getByLabelText("Password:"), "password123");
     await user.click(screen.getByRole("button", { name: "Sign Up" }));
 
-    expect(
-      await screen.findByText("Account created! Please sign in."),
-    ).toBeInTheDocument();
+    expect(mockNavigate).toHaveBeenCalledWith({
+      to: "/login",
+      search: { message: "Account created! Please sign in." },
+    });
   });
 
   test("shows error message on failed sign-up", async () => {

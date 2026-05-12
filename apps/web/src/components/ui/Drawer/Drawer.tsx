@@ -2,7 +2,7 @@ import styles from "./Drawer.module.css";
 import type { ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { Button } from "../Button/Button";
-import { useEffect } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { lockScroll, unlockScroll } from "../../../lib/scrollCount";
 
 type Props = {
@@ -11,7 +11,16 @@ type Props = {
   children: ReactNode;
 };
 
+const CLOSE_DURATION = 250;
+
 const Drawer = ({ onClose, className, children }: Props) => {
+  const [isClosing, setIsClosing] = useState(false);
+
+  const handleClose = useCallback(() => {
+    setIsClosing(true);
+    setTimeout(onClose, CLOSE_DURATION);
+  }, [onClose]);
+
   useEffect(() => {
     lockScroll();
     return () => unlockScroll();
@@ -19,28 +28,30 @@ const Drawer = ({ onClose, className, children }: Props) => {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") handleClose();
     };
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [onClose]);
+  }, [handleClose]);
 
   return createPortal(
     <>
       <div
-        className={styles.backdrop}
-        onClick={onClose}
+        className={`${styles.backdrop} ${isClosing ? styles.backdropClosing : ""}`}
+        onClick={handleClose}
         role="presentation"
         data-testid="modal-backdrop"
       />
-      <div className={`${styles.drawer} ${className ?? ""}`}>
+      <div
+        className={`${styles.drawer} ${isClosing ? styles.drawerClosing : ""} ${className ?? ""}`}
+      >
         <div className={styles.content}>{children}</div>
         <div className={styles.footer}>
           <Button
             type="button"
             variant="ghost"
             color="secondary"
-            onClick={onClose}
+            onClick={handleClose}
           >
             Close
           </Button>

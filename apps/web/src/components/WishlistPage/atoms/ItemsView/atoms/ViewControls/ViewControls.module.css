@@ -22,19 +22,33 @@
 }
 
 .viewToggle {
+  position: relative;
   display: flex;
   background-color: var(--color-neutral-200);
   border-radius: var(--radius-full);
   padding: var(--spacing-xs);
   box-shadow: var(--shadow-inset-sm);
+}
 
-  &:hover {
-    outline: 2px solid var(--color-pink-200);
-    outline-offset: -1px;
-  }
+.indicator {
+  position: absolute;
+  top: var(--spacing-xs);
+  bottom: var(--spacing-xs);
+  left: var(--spacing-xs);
+  width: 77px;
+  background-color: var(--color-neutral-50);
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-sm);
+  transition: left var(--duration-fast) var(--ease-spring);
+}
+
+.indicatorRight {
+  left: calc(var(--spacing-xs) + 77px);
 }
 
 .toggleOption {
+  position: relative;
+  z-index: 1;
   border: none;
   font-size: var(--font-size-sm);
   display: flex;
@@ -45,11 +59,7 @@
   cursor: pointer;
   color: var(--color-neutral-500);
   border-radius: var(--radius-full);
-
-  &.active {
-    background-color: var(--color-neutral-50);
-    box-shadow: var(--shadow-sm);
-  }
+  width: 77px;
 }
 
 .selectWrapper {
@@ -100,6 +110,9 @@
   cursor: pointer;
   color: var(--color-neutral-500);
   border-radius: var(--radius-full);
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
 
   &.active {
     background-color: var(--color-neutral-200);

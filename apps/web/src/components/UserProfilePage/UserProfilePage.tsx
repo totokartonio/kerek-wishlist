@@ -6,10 +6,12 @@ import { useEffect } from "react";
 import styles from "./UserProfilePage.module.css";
 import WishlistsGrid from "../WishlistsGrid";
 import { WishlistGridSkeleton } from "../WishlistsGrid/WishlistGridSkeleton";
-import ErrorMessage from "../ui/ErrorMessage";
-import { LinkButton } from "../ui/Button/LinkButton";
 import Skeleton from "../ui/Skeleton";
 import Avatar from "../ui/Avatar";
+import ErrorPage from "../ErrorPage";
+import NotFound from "../NotFound";
+import surprised from "../../assets/illustrations/surprised.png";
+import EmptyState from "../EmptyState";
 
 type Props = {
   userId: string;
@@ -40,31 +42,14 @@ const UserProfilePage = ({ userId }: Props) => {
 
   if (isError)
     return (
-      <div className={styles.wrapper}>
-        <ErrorMessage
-          title="Something went wrong"
-          message="Can't load this user now. Try again later."
-          action={
-            <LinkButton variant="ghost" color="primary" to="/dashboard">
-              Go Back
-            </LinkButton>
-          }
-        />
-      </div>
+      <ErrorPage
+        title="Something went wrong"
+        message="Can't load this user now. Try again later."
+      />
     );
   if (!user)
     return (
-      <div className={styles.wrapper}>
-        <ErrorMessage
-          title="Something went wrong"
-          message="User doesn't exist."
-          action={
-            <LinkButton variant="ghost" color="primary" to="/dashboard">
-              Go Back
-            </LinkButton>
-          }
-        />
-      </div>
+      <NotFound title="User not found" message="This user doesn't exist." />
     );
 
   return (
@@ -84,7 +69,11 @@ const UserProfilePage = ({ userId }: Props) => {
             }))}
           />
         ) : (
-          <p className={styles.emptyState}>No wishlists found.</p>
+          <EmptyState
+            illustration={surprised}
+            title="No wishlists here"
+            message="This user hasn't shared any public wishlists yet."
+          />
         )}
       </section>
     </div>

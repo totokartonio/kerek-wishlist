@@ -1,7 +1,19 @@
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import { describe, test, expect, vi } from "vitest";
+import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
 import { Drawer } from "./Drawer";
+
+vi.mock("../../../lib/scrollCount", () => ({
+  lockScroll: vi.fn(),
+  unlockScroll: vi.fn(),
+}));
+
+beforeEach(() => {
+  vi.useFakeTimers();
+});
+
+afterEach(() => {
+  vi.useRealTimers();
+});
 
 describe("Drawer", () => {
   test("renders children", () => {
@@ -14,21 +26,21 @@ describe("Drawer", () => {
     expect(screen.getByRole("button", { name: "Close" })).toBeInTheDocument();
   });
 
-  test("calls onClose when backdrop clicked", async () => {
-    const user = userEvent.setup();
+  test("calls onClose when backdrop clicked", () => {
     const onClose = vi.fn();
     render(<Drawer onClose={onClose}>Content</Drawer>);
 
-    await user.click(screen.getByTestId("modal-backdrop"));
+    fireEvent.click(screen.getByTestId("modal-backdrop"));
+    vi.advanceTimersByTime(250);
     expect(onClose).toHaveBeenCalledOnce();
   });
 
-  test("calls onClose when close button clicked", async () => {
-    const user = userEvent.setup();
+  test("calls onClose when close button clicked", () => {
     const onClose = vi.fn();
     render(<Drawer onClose={onClose}>Content</Drawer>);
 
-    await user.click(screen.getByRole("button", { name: "Close" }));
+    fireEvent.click(screen.getByRole("button", { name: "Close" }));
+    vi.advanceTimersByTime(250);
     expect(onClose).toHaveBeenCalledOnce();
   });
 });

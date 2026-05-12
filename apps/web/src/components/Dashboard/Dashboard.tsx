@@ -10,6 +10,8 @@ import styles from "./Dashboard.module.css";
 import ErrorMessage from "../ui/ErrorMessage";
 import { PlusIcon } from "@phosphor-icons/react";
 import FAB from "../ui/FAB";
+import emptyInbox from "../../assets/illustrations/empty-inbox.png";
+import EmptyState from "../EmptyState";
 
 const Dashboard = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -64,9 +66,11 @@ const Dashboard = () => {
         ) : ownedWishlists.length > 0 ? (
           <WishlistsGrid color="primary" wishlists={ownedWishlists} />
         ) : (
-          <p className={styles.emptyState}>
-            You don't have any wishlists yet. Create one to get started.
-          </p>
+          <EmptyState
+            illustration={emptyInbox}
+            title="No wishlists yet"
+            message="Create your first wishlist and start sharing with family and friends."
+          />
         )}
       </section>
       {sharedWishlists.length > 0 && (

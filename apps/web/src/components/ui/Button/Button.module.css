@@ -6,6 +6,10 @@
   font-family: inherit;
   line-height: 1;
   text-align: center;
+  transition:
+    transform var(--duration-instant) var(--ease-in),
+    filter var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
 
   &.md {
     padding: var(--spacing-md) var(--spacing-xl);
@@ -75,14 +79,23 @@
 
     &.primary {
       color: var(--color-primary);
+      &:hover {
+        background-color: var(--color-orange-100);
+      }
     }
 
     &.secondary {
       color: var(--color-pink-600);
+      &:hover {
+        background-color: var(--color-pink-100);
+      }
     }
 
     &.danger {
       color: var(--color-pink-600);
+      &:hover {
+        background-color: var(--color-pink-100);
+      }
     }
   }
 

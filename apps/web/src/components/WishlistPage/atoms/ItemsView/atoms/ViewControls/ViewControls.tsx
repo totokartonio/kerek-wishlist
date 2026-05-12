@@ -73,15 +73,18 @@ const ViewControls = ({
       ) : (
         <div className={styles.wrapper}>
           <div className={styles.viewToggle}>
+            <div
+              className={`${styles.indicator} ${viewMode === "grid" ? styles.indicatorRight : ""}`}
+            />
             <button
-              className={`${styles.toggleOption} ${viewMode === "table" ? styles.active : ""}`}
+              className={styles.toggleOption}
               onClick={() => onViewChange("table")}
             >
               <TableIcon size={18} />
               <span>Table</span>
             </button>
             <button
-              className={`${styles.toggleOption} ${viewMode === "grid" ? styles.active : ""}`}
+              className={styles.toggleOption}
               onClick={() => onViewChange("grid")}
             >
               <SquaresFourIcon size={18} />

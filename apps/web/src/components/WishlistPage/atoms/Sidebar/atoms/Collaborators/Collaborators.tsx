@@ -7,6 +7,7 @@ import { TrashIcon } from "@phosphor-icons/react/dist/csr/Trash";
 import Badge from "../../../../../ui/Badge";
 import { Button } from "../../../../../ui/Button/Button";
 import Avatar from "../../../../../ui/Avatar";
+import { Link } from "@tanstack/react-router";
 
 type Props = {
   isOwner: boolean;
@@ -41,9 +42,14 @@ const Collaborators = ({
             <li key={collaborator.id} className={styles.listItem}>
               <div className={styles.nameWrapper}>
                 <Avatar avatar={collaborator.user.avatar ?? null} size={48} />
-                <strong className={styles.name}>
-                  {collaborator.user.name}
-                </strong>
+                <span className={styles.name}>
+                  <Link
+                    to="/users/$userId"
+                    params={{ userId: collaborator.user.id }}
+                  >
+                    {collaborator.user.name}
+                  </Link>
+                </span>
               </div>
               {isOwner ? (
                 <RoleSelect
