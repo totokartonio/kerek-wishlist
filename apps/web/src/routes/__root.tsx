@@ -1,4 +1,8 @@
-import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
+import {
+  createRootRouteWithContext,
+  Outlet,
+  type NotFoundRouteProps,
+} from "@tanstack/react-router";
 import type { authClient } from "../lib/auth-client";
 import Layout from "../components/Layout";
 import NotFound from "../components/NotFound";
@@ -16,6 +20,8 @@ const RootLayout = () => (
 
 export const Route = createRootRouteWithContext<RouterContext>()({
   component: RootLayout,
-  notFoundComponent: NotFound,
+  notFoundComponent: NotFound as unknown as (
+    props: NotFoundRouteProps,
+  ) => React.JSX.Element,
   errorComponent: ErrorPage,
 });
