@@ -2,5 +2,8 @@
   "name": "@wishlist/database",
   "version": "0.0.0",
   "private": true,
-  "main": "./index.ts"
+  "main": "./index.ts",
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.4.0"
+  }
 }
