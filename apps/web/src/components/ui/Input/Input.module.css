@@ -66,4 +66,16 @@
 .errorMessage {
   font-size: var(--font-size-sm);
   color: var(--color-error);
+  animation: slideDownIn var(--duration-normal) var(--ease-spring) forwards;
+}
+
+@keyframes slideDownIn {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

@@ -20,6 +20,15 @@ vi.mock("@tanstack/react-router", async (importOriginal) => {
     ),
   };
 });
+vi.mock("../../assets/illustrations/surprised.png", () => ({
+  default: "surprised.png",
+}));
+vi.mock("../../assets/illustrations/problem-solver.png", () => ({
+  default: "problem-solver.png",
+}));
+vi.mock("../../assets/illustrations/character-404.png", () => ({
+  default: "character-404.png",
+}));
 
 const mockUser: UserProfile = { id: "user-1", name: "Jane Doe", avatar: null };
 const mockWishlists: Wishlist[] = [
@@ -72,7 +81,12 @@ describe("UserProfilePage", () => {
     vi.mocked(getUser).mockResolvedValue(null as unknown as UserProfile);
     renderWithClient(<UserProfilePage userId="user-1" />);
 
-    expect(await screen.findByText("User doesn't exist.")).toBeInTheDocument();
+    expect(
+      await screen.findByRole("heading", { name: "User not found" }),
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByText("This user doesn't exist."),
+    ).toBeInTheDocument();
   });
 
   test("shows no wishlists message when wishlists are undefined", async () => {
@@ -81,6 +95,11 @@ describe("UserProfilePage", () => {
     );
     renderWithClient(<UserProfilePage userId="user-1" />);
 
-    expect(await screen.findByText("No wishlists found.")).toBeInTheDocument();
+    expect(await screen.findByText("No wishlists here")).toBeInTheDocument();
+    expect(
+      await screen.findByText(
+        "This user hasn't shared any public wishlists yet.",
+      ),
+    ).toBeInTheDocument();
   });
 });

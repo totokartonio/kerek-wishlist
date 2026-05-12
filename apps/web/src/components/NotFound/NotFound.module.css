@@ -1,13 +1,17 @@
 .wrapper {
-  padding: var(--spacing-xl);
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-2xl);
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-2xl);
+  text-align: center;
+  flex: 1;
+  min-height: 60vh;
 }
 
-.backButton {
+.illustration {
   width: 200px;
+  height: 200px;
+  object-fit: contain;
 }

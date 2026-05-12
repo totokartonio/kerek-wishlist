@@ -1,0 +1,209 @@
+.hero {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: var(--spacing-2xl);
+  align-items: center;
+  padding: var(--spacing-2xl) 0;
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  align-self: flex-start;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--radius-full);
+  background-color: var(--color-surface-secondary);
+  color: var(--color-pink-600);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  border: 1px solid var(--color-pink-200);
+}
+
+.title {
+  font-size: clamp(2.25rem, 5vw, 4rem);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.05;
+  color: var(--color-neutral-900);
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  font-size: var(--font-size-lg);
+  line-height: 1.55;
+  color: var(--color-neutral-500);
+  margin: 0;
+  max-width: 520px;
+}
+
+.ctaRow {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+  flex-wrap: wrap;
+}
+
+.ghostLink {
+  padding: var(--spacing-md) var(--spacing-xl);
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--color-pink-300);
+  color: var(--color-pink-600);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+  transition: background-color var(--duration-fast, 150ms) ease;
+}
+.ghostLink:hover {
+  background-color: var(--color-surface-secondary);
+  text-decoration: none;
+}
+
+.pills {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+.pills li {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-orange-200);
+  background-color: var(--color-background);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-orange-700);
+}
+
+/* Visual */
+.visual {
+  position: relative;
+  min-height: 480px;
+}
+
+.mockCard {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  color: white;
+}
+
+.mockHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mockDots {
+  display: inline-flex;
+  gap: 6px;
+}
+.mockDots span {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background-color: rgba(255, 255, 255, 0.55);
+}
+
+.mockTitle {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  margin: 0;
+  color: white;
+}
+
+.mockItems {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.mockItem {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-lg);
+  background-color: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(4px);
+}
+
+.mockThumb {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  background-color: white;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+}
+.mockThumbImg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.mockItemName {
+  flex: 1;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  color: white;
+}
+
+.note {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-md) var(--spacing-lg);
+  box-shadow: var(--shadow-sm, 0 4px 12px rgba(0, 0, 0, 0.08));
+  max-width: 220px;
+}
+
+.noteLabel {
+  font-size: var(--font-size-xs);
+  color: var(--color-neutral-400);
+  font-weight: var(--font-weight-medium);
+}
+
+.noteShared {
+  left: -8px;
+  bottom: 32px;
+}
+.noteShared strong {
+  color: var(--color-neutral-700);
+  font-weight: var(--font-weight-semibold);
+}
+
+.noteSurprise {
+  right: -8px;
+  bottom: 80px;
+  background-color: var(--color-pink-200) !important;
+}
+.noteSurprise .noteLabel { color: var(--color-pink-700); }
+.noteSurprise strong {
+  color: var(--color-pink-800);
+  font-weight: var(--font-weight-semibold);
+}
+
+@media (max-width: 768px) {
+  .hero { grid-template-columns: 1fr; }
+  .visual { min-height: 420px; margin-top: var(--spacing-xl); }
+  .noteShared { left: 0; bottom: 8px; }
+  .noteSurprise { right: 0; bottom: 60px; }
+}

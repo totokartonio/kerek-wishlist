@@ -12,6 +12,9 @@ vi.mock("../../hooks/invites/useJoinInvite", () => ({
   useJoinInvite: vi.fn(),
 }));
 vi.mock("../../lib/auth-client", () => ({ useSession: vi.fn() }));
+vi.mock("../../assets/illustrations/heart-hug.png", () => ({
+  default: "heart-hug.png",
+}));
 vi.mock("@tanstack/react-router", async (importOriginal) => {
   const actual = (await importOriginal()) as Record<string, unknown>;
   return {
@@ -86,7 +89,7 @@ describe("InvitePage", () => {
 
     renderWithClient(<InvitePage token="test-token" />);
 
-    expect(screen.getByText("Loading...")).toBeInTheDocument();
+    expect(document.querySelector('[class*="spinner"]')).toBeInTheDocument();
   });
 
   test("shows error when invite not found or expired", () => {

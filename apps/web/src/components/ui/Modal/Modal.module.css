@@ -7,6 +7,7 @@
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   background-color: rgba(0, 0, 0, 0.177);
+  animation: fadeIn var(--duration-normal) var(--ease-out) forwards;
 }
 
 .modal {
@@ -23,6 +24,7 @@
   padding: var(--spacing-2xl);
   background-color: var(--color-background);
   box-shadow: var(--shadow-md);
+  animation: scaleIn var(--duration-normal) var(--ease-spring) forwards;
 }
 
 .closeButton {
@@ -49,11 +51,11 @@
     height: 100%;
     top: 0;
     left: 0;
-    transform: none;
     border-radius: 0;
     overflow-y: auto;
     justify-content: center;
     padding-inline: var(--spacing-lg);
+    animation-name: scaleInMobile;
   }
 
   .closeButton {
@@ -63,5 +65,32 @@
       width: 24px;
       height: 24px;
     }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: translate(-50%, -50%) scale(0.97);
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes scaleInMobile {
+  from {
+    transform: scale(0.97);
+  }
+  to {
+    transform: scale(1);
   }
 }

@@ -1,6 +1,5 @@
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import { describe, test, expect, vi, beforeEach } from "vitest";
+import { render, screen, fireEvent, act } from "@testing-library/react";
+import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
 import { Dropdown } from "./Dropdown";
 
 vi.mock("@tanstack/react-router", async (importOriginal) => {
@@ -48,6 +47,11 @@ const allItems = [...linkItems, ...actionItems];
 
 beforeEach(() => {
   vi.clearAllMocks();
+  vi.useFakeTimers();
+});
+
+afterEach(() => {
+  vi.useRealTimers();
 });
 
 describe("Dropdown", () => {
@@ -65,47 +69,45 @@ describe("Dropdown", () => {
     ).not.toBeInTheDocument();
   });
 
-  test("clicking trigger opens the menu", async () => {
-    const user = userEvent.setup();
+  test("clicking trigger opens the menu", () => {
     render(<Dropdown trigger={<span>Open</span>} items={allItems} />);
 
-    await user.click(screen.getByText("Open"));
+    fireEvent.click(screen.getByText("Open"));
 
     expect(screen.getByRole("link", { name: "Dashboard" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Settings" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Log out" })).toBeInTheDocument();
   });
 
-  test("clicking trigger again closes the menu", async () => {
-    const user = userEvent.setup();
+  test("clicking trigger again closes the menu", () => {
     render(<Dropdown trigger={<span>Open</span>} items={allItems} />);
 
-    await user.click(screen.getByText("Open"));
-    await user.click(screen.getByText("Open"));
+    fireEvent.click(screen.getByText("Open"));
+    fireEvent.click(screen.getByText("Open"));
+    act(() => vi.advanceTimersByTime(150));
 
     expect(
       screen.queryByRole("link", { name: "Dashboard" }),
     ).not.toBeInTheDocument();
   });
 
-  test("clicking a link item closes the menu", async () => {
-    const user = userEvent.setup();
+  test("clicking a link item closes the menu", () => {
     render(<Dropdown trigger={<span>Open</span>} items={allItems} />);
 
-    await user.click(screen.getByText("Open"));
-    await user.click(screen.getByRole("link", { name: "Dashboard" }));
+    fireEvent.click(screen.getByText("Open"));
+    fireEvent.click(screen.getByRole("link", { name: "Dashboard" }));
 
     expect(
       screen.queryByRole("link", { name: "Dashboard" }),
     ).not.toBeInTheDocument();
   });
 
-  test("clicking an action item calls onClick and closes the menu", async () => {
-    const user = userEvent.setup();
+  test("clicking an action item calls onClick and closes the menu", () => {
     render(<Dropdown trigger={<span>Open</span>} items={allItems} />);
 
-    await user.click(screen.getByText("Open"));
-    await user.click(screen.getByRole("button", { name: "Log out" }));
+    fireEvent.click(screen.getByText("Open"));
+    fireEvent.click(screen.getByRole("button", { name: "Log out" }));
+    act(() => vi.advanceTimersByTime(150));
 
     expect(mockOnClick).toHaveBeenCalledTimes(1);
     expect(
@@ -113,11 +115,10 @@ describe("Dropdown", () => {
     ).not.toBeInTheDocument();
   });
 
-  test("renders link items as anchor elements with correct href", async () => {
-    const user = userEvent.setup();
+  test("renders link items as anchor elements with correct href", () => {
     render(<Dropdown trigger={<span>Open</span>} items={linkItems} />);
 
-    await user.click(screen.getByText("Open"));
+    fireEvent.click(screen.getByText("Open"));
 
     expect(screen.getByRole("link", { name: "Dashboard" })).toHaveAttribute(
       "href",
@@ -129,27 +130,24 @@ describe("Dropdown", () => {
     );
   });
 
-  test("renders divider before items with divider flag", async () => {
-    const user = userEvent.setup();
+  test("renders divider before items with divider flag", () => {
     render(<Dropdown trigger={<span>Open</span>} items={allItems} />);
 
-    await user.click(screen.getByText("Open"));
+    fireEvent.click(screen.getByText("Open"));
 
     expect(document.querySelector("hr")).toBeInTheDocument();
   });
 
-  test("danger item has danger class", async () => {
-    const user = userEvent.setup();
+  test("danger item has danger class", () => {
     render(<Dropdown trigger={<span>Open</span>} items={allItems} />);
 
-    await user.click(screen.getByText("Open"));
+    fireEvent.click(screen.getByText("Open"));
 
     const logOutButton = screen.getByRole("button", { name: "Log out" });
     expect(logOutButton.className).toContain("danger");
   });
 
-  test("renders icons when provided", async () => {
-    const user = userEvent.setup();
+  test("renders icons when provided", () => {
     const itemsWithIcons = [
       {
         type: "link" as const,
@@ -160,7 +158,7 @@ describe("Dropdown", () => {
     ];
     render(<Dropdown trigger={<span>Open</span>} items={itemsWithIcons} />);
 
-    await user.click(screen.getByText("Open"));
+    fireEvent.click(screen.getByText("Open"));
 
     expect(screen.getByTestId("icon")).toBeInTheDocument();
   });

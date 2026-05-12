@@ -7,6 +7,8 @@ import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { ApiError } from "./lib/apiError";
 import { authClient } from "./lib/auth-client";
 import { routeTree } from "./routeTree.gen";
+import Spinner from "./components/ui/Spinner";
+import AppShell from "./components/AppShell";
 
 type RouterContext = {
   session: Awaited<ReturnType<typeof authClient.getSession>> | null;
@@ -17,6 +19,10 @@ const router = createRouter({
   context: {
     session: null,
   } as RouterContext,
+  defaultPreload: "intent",
+  defaultPendingMs: 300,
+  defaultPendingComponent: Spinner,
+  defaultViewTransition: true,
 });
 
 declare module "@tanstack/react-router" {
@@ -45,7 +51,7 @@ const queryClient = new QueryClient({
 
 export function App() {
   const { data: session, isPending } = authClient.useSession();
-  if (isPending) return <p>Loading...</p>;
+  if (isPending) return <AppShell />;
   return (
     <RouterProvider router={router} context={{ session: session ?? null }} />
   );

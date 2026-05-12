@@ -50,6 +50,18 @@ vi.mock("../../hooks/items/useItemsFilters", () => ({
     clearFilters: vi.fn(),
   }),
 }));
+vi.mock("../../assets/illustrations/character-404.png", () => ({
+  default: "character-404.png",
+}));
+vi.mock("../../assets/illustrations/problem-solver.png", () => ({
+  default: "problem-solver.png",
+}));
+vi.mock("../../assets/illustrations/unauthorized.png", () => ({
+  default: "unauthorized.png",
+}));
+vi.mock("../../assets/illustrations/start-your-task.png", () => ({
+  default: "start-your-task.png",
+}));
 
 const mockWishlist = {
   id: "test-wishlist-id",
@@ -329,9 +341,13 @@ describe("WishlistPage", () => {
     renderWithClient(<WishlistPage wishlistId="test-wishlist-id" />);
 
     expect(
-      await screen.findByRole("heading", { name: "Something went wrong" }),
+      await screen.findByRole("heading", { name: "Wishlist not found" }),
     ).toBeInTheDocument();
-    expect(await screen.findByText("Wishlist not found.")).toBeInTheDocument();
+    expect(
+      await screen.findByText(
+        "This wishlist doesn't exist or may have been deleted.",
+      ),
+    ).toBeInTheDocument();
   });
 
   test("shows generic error when wishlist fails to load", async () => {

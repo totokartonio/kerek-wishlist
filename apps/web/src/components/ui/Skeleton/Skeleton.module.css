@@ -5,9 +5,9 @@
 
 @keyframes colorShift {
   from {
-    background: var(--color-neutral-100);
+    background: var(--color-neutral-200);
   }
   to {
-    background: var(--color-neutral-200);
+    background: var(--color-neutral-100);
   }
 }

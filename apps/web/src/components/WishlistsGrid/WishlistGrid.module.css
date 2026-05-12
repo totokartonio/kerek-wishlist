@@ -7,14 +7,17 @@
 .container {
   display: block;
   text-decoration: none;
+  transition: transform var(--duration-fast) var(--ease-spring);
 
   &:hover {
     transform: translateY(-2px);
     text-decoration: none;
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.12));
   }
 
   &:active {
     transform: translateY(2px);
+    transition-duration: var(--duration-instant);
   }
 }
 
