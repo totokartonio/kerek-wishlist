@@ -7,6 +7,15 @@ import { AVATAR_ICONS } from "@wishlist/icons";
 export const auth = betterAuth({
   secret: process.env.BETTER_AUTH_SECRET,
   baseURL: process.env.BETTER_AUTH_URL || "http://localhost:3000",
+  advanced: {
+    crossSubdomainCookies: {
+      enabled: true,
+    },
+    defaultCookieAttributes: {
+      sameSite: "none",
+      secure: true,
+    },
+  },
   trustedOrigins: [process.env.CLIENT_URL || "http://localhost:5173"],
   emailAndPassword: {
     enabled: true,
