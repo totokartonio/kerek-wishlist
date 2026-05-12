@@ -91,9 +91,6 @@ const SignInForm = ({
           {message.text}
         </div>
       )}
-      <a href="#" data-testid="change-password">
-        Forgot password?
-      </a>
       <div className={styles.switch}>
         Don't have account?{" "}
         <Button

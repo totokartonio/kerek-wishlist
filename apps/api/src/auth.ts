@@ -1,15 +1,8 @@
 import { betterAuth } from "better-auth";
 import { anonymous } from "better-auth/plugins";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { PrismaClient } from "@wishlist/database/generated/prisma/client";
-import { PrismaLibSql } from "@prisma/adapter-libsql";
+import { prisma } from "@wishlist/database";
 import { AVATAR_ICONS } from "@wishlist/icons";
-
-const adapter = new PrismaLibSql({
-  url: process.env.DATABASE_URL || "",
-});
-
-const prisma = new PrismaClient({ adapter });
 
 export const auth = betterAuth({
   secret: process.env.BETTER_AUTH_SECRET,
@@ -38,7 +31,7 @@ export const auth = betterAuth({
     },
   },
   database: prismaAdapter(prisma, {
-    provider: "sqlite",
+    provider: "postgresql",
   }),
   databaseHooks: {
     user: {

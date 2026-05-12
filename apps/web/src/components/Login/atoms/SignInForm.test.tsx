@@ -36,7 +36,6 @@ describe("SignInForm", () => {
     expect(screen.getByLabelText("Email:")).toBeInTheDocument();
     expect(screen.getByLabelText("Password:")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Sign In" })).toBeInTheDocument();
-    expect(screen.getByTestId("change-password")).toBeInTheDocument();
     expect(screen.getByTestId("change-mode")).toBeInTheDocument();
   });
 
