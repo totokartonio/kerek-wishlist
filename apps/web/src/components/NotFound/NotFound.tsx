@@ -1,8 +1,9 @@
 import { LinkButton } from "../ui/Button/LinkButton";
 import styles from "./NotFound.module.css";
 import notFoundIllustration from "../../assets/illustrations/character-404.png";
+import type { NotFoundRouteProps } from "@tanstack/react-router";
 
-type Props = {
+type Props = NotFoundRouteProps & {
   title?: string;
   message?: string;
 };
