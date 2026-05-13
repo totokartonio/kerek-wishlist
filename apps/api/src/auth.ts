@@ -4,16 +4,20 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "@wishlist/database";
 import { AVATAR_ICONS } from "@wishlist/icons";
 
+const isProd = process.env.NODE_ENV === "production";
+
 export const auth = betterAuth({
   secret: process.env.BETTER_AUTH_SECRET,
   baseURL: process.env.BETTER_AUTH_URL || "http://localhost:3000",
   advanced: {
-    crossSubdomainCookies: {
-      enabled: true,
-    },
+    ...(isProd && {
+      crossSubdomainCookies: {
+        enabled: true,
+      },
+    }),
     defaultCookieAttributes: {
-      sameSite: "none",
-      secure: true,
+      sameSite: isProd ? "none" : "lax",
+      secure: isProd,
     },
   },
   trustedOrigins: [process.env.CLIENT_URL || "http://localhost:5173"],
@@ -22,6 +26,13 @@ export const auth = betterAuth({
     autoSignIn: false,
   },
   user: {
+    additionalFields: {
+      avatar: {
+        type: "string",
+        required: false,
+        input: false,
+      },
+    },
     changeEmail: {
       enabled: true,
       updateEmailWithoutVerification: true,
