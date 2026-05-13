@@ -6,6 +6,7 @@ import Account from "./atoms/Account";
 import Security from "./atoms/Security";
 import { useGetUser } from "../../hooks/users/useGetUser";
 import { useUpdateAvatar } from "../../hooks/users/useUpdateAvatar";
+import { useHasPassword } from "../../hooks/users/useHasPassword";
 
 export type Message = { text: string; type: "success" | "error" } | null;
 
@@ -17,6 +18,8 @@ const SettingsPage = () => {
 
   const { data: user } = useGetUser(session?.user.id ?? "", !!session);
   const { mutate: updateAvatar } = useUpdateAvatar();
+
+  const { data: hasPasswordData } = useHasPassword();
 
   const handleChangeName = async (name: string | undefined) => {
     const { error } = await authClient.updateUser({ name });
@@ -131,6 +134,7 @@ const SettingsPage = () => {
       <Security
         onChangePassword={handleChangePassword}
         onDelete={handleDelete}
+        hasPassword={hasPasswordData?.hasPassword ?? false}
       />
     </div>
   );

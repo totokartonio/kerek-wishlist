@@ -40,3 +40,10 @@ export const updateAvatar = async (avatar: string): Promise<UserProfile> => {
   });
   return handleResponse<UserProfile>(response);
 };
+
+export const getHasPassword = async (): Promise<{ hasPassword: boolean }> => {
+  const response = await fetch(`${BASE_URL}/api/users/me/has-password`, {
+    credentials: "include",
+  });
+  return handleResponse<{ hasPassword: boolean }>(response);
+};

@@ -45,6 +45,21 @@ users.patch("/me", async (c) => {
   }
 });
 
+users.get("/me/has-password", async (c) => {
+  const session = await auth.api.getSession({ headers: c.req.raw.headers });
+  if (!session) return c.json({ error: "Unauthorized" }, 401);
+
+  const account = await prisma.account.findFirst({
+    where: {
+      userId: session.user.id,
+      providerId: "credential",
+    },
+    select: { id: true },
+  });
+
+  return c.json({ hasPassword: !!account });
+});
+
 users.get("/:userId", async (c) => {
   try {
     const userId = c.req.param("userId");

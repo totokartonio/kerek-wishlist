@@ -21,9 +21,18 @@ const Login = () => {
     name: "",
   });
 
-  const { message: successParam } = useSearch({ from: "/login" });
+  const { message: successParam, error: errorParam } = useSearch({
+    from: "/login",
+  });
   const [message, setMessage] = useState<Message>(
-    successParam ? { type: "success", text: successParam } : null,
+    errorParam
+      ? {
+          type: "error",
+          text: "Something went wrong with Google sign in. Please try again.",
+        }
+      : successParam
+        ? { type: "success", text: successParam }
+        : null,
   );
   const [fieldErrors, setFieldErrors] = useState({
     email: "",
@@ -95,6 +104,14 @@ const Login = () => {
     }
   };
 
+  const handleGoogleSignIn = async () => {
+    await signIn.social({
+      provider: "google",
+      callbackURL: `${import.meta.env.VITE_APP_URL}/dashboard`,
+      errorCallbackURL: `${import.meta.env.VITE_APP_URL}/login?error=oauth`,
+    });
+  };
+
   const hanldeChangeMode = () => {
     setMessage(null);
     if (mode === "sign-in") setMode("sign-up");
@@ -159,6 +176,7 @@ const Login = () => {
             onChange={handleChange}
             onBlur={handleBlur}
             onChangeMode={hanldeChangeMode}
+            onGoogleSignIn={handleGoogleSignIn}
           />
         ) : (
           <SignUpForm
@@ -171,6 +189,7 @@ const Login = () => {
             onChange={handleChange}
             onBlur={handleBlur}
             onChangeMode={hanldeChangeMode}
+            onGoogleSignIn={handleGoogleSignIn}
           />
         )}
       </Card>
