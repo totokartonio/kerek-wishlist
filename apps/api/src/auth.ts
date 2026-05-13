@@ -20,7 +20,10 @@ export const auth = betterAuth({
       secure: isProd,
     },
   },
-  trustedOrigins: [process.env.CLIENT_URL || "http://localhost:5173"],
+  trustedOrigins: [
+    process.env.CLIENT_URL || "http://localhost:5173",
+    process.env.BETTER_AUTH_URL || "http://localhost:3000",
+  ],
   emailAndPassword: {
     enabled: true,
     autoSignIn: false,
