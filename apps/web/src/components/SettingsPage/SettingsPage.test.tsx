@@ -16,6 +16,11 @@ vi.mock("../../lib/auth-client", () => ({
 }));
 
 vi.mock("../../api/users", () => ({ getUser: vi.fn(), updateAvatar: vi.fn() }));
+vi.mock("../../api/users", () => ({
+  getUser: vi.fn(),
+  updateAvatar: vi.fn(),
+  getHasPassword: vi.fn().mockResolvedValue({ hasPassword: true }),
+}));
 
 vi.mock("./atoms/Account", () => ({
   default: ({

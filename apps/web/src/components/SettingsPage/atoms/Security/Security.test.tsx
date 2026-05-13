@@ -27,6 +27,7 @@ const mockOnDelete = vi.fn();
 const defaultProps = {
   onChangePassword: mockOnChangePassword,
   onDelete: mockOnDelete,
+  hasPassword: true,
 };
 
 beforeEach(() => {
