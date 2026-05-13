@@ -4,6 +4,7 @@ import Input from "../../../components/ui/Input";
 import { Button } from "../../../components/ui/Button/Button";
 import { EyeIcon } from "@phosphor-icons/react/dist/csr/Eye";
 import { EyeSlashIcon } from "@phosphor-icons/react/dist/csr/EyeSlash";
+import { GoogleLogoIcon } from "@phosphor-icons/react/dist/csr/GoogleLogo";
 import type { Message } from "../Login";
 
 type Props = {
@@ -20,6 +21,7 @@ type Props = {
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur: (event: React.FocusEvent<HTMLInputElement>) => void;
   onChangeMode: () => void;
+  onGoogleSignIn: () => void;
 };
 
 const SignUpForm = ({
@@ -32,6 +34,7 @@ const SignUpForm = ({
   onChange,
   onBlur,
   onChangeMode,
+  onGoogleSignIn,
 }: Props) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -110,6 +113,18 @@ const SignUpForm = ({
           data-testid="change-mode"
         >
           Sign in
+        </Button>
+      </div>
+      <div className={styles.googleWrapper}>
+        <Button
+          variant="ghost"
+          color="secondary"
+          type="button"
+          onClick={onGoogleSignIn}
+          className={styles.googleButton}
+        >
+          <GoogleLogoIcon size={24} />
+          Continue with Google
         </Button>
       </div>
     </div>

@@ -12,11 +12,12 @@ type Props = {
     newPassword: string | undefined,
   ) => void;
   onDelete: () => void;
+  hasPassword: boolean;
 };
 
 type ModalMode = "password" | "delete" | null;
 
-const Security = ({ onChangePassword, onDelete }: Props) => {
+const Security = ({ onChangePassword, onDelete, hasPassword }: Props) => {
   const [currentPassword, setCurrentPassword] = useState<string>("");
   const [newPassword, setNewPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState(false);
@@ -57,42 +58,46 @@ const Security = ({ onChangePassword, onDelete }: Props) => {
     <section className={styles.section}>
       <h2>Security</h2>
       <Card variant="flat" color="secondary" className={styles.card}>
-        <h3>Change Password</h3>
-        <form
-          id="password"
-          name="password"
-          className={styles.form}
-          onSubmit={handleSubmit}
-        >
-          <div className={styles.inputWrapper}>
-            <Input
-              type={showPassword ? "text" : "password"}
-              id="current-password-input"
-              label="Enter your current password:"
-              value={currentPassword}
-              onChange={(event) => setCurrentPassword(event.target.value)}
-              className={styles.input}
-              rightElement={rightElement}
-            />
-            <Input
-              type={showPassword ? "text" : "password"}
-              id="new-password-input"
-              label="Enter your new password:"
-              value={newPassword}
-              onChange={(event) => setNewPassword(event.target.value)}
-              className={styles.input}
-              rightElement={rightElement}
-            />
-          </div>
-          <Button
-            variant="raised"
-            color="secondary"
-            type="submit"
-            disabled={!currentPassword || !newPassword}
-          >
-            Submit
-          </Button>
-        </form>
+        {hasPassword && (
+          <>
+            <h3>Change Password</h3>
+            <form
+              id="password"
+              name="password"
+              className={styles.form}
+              onSubmit={handleSubmit}
+            >
+              <div className={styles.inputWrapper}>
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  id="current-password-input"
+                  label="Enter your current password:"
+                  value={currentPassword}
+                  onChange={(event) => setCurrentPassword(event.target.value)}
+                  className={styles.input}
+                  rightElement={rightElement}
+                />
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  id="new-password-input"
+                  label="Enter your new password:"
+                  value={newPassword}
+                  onChange={(event) => setNewPassword(event.target.value)}
+                  className={styles.input}
+                  rightElement={rightElement}
+                />
+              </div>
+              <Button
+                variant="raised"
+                color="secondary"
+                type="submit"
+                disabled={!currentPassword || !newPassword}
+              >
+                Submit
+              </Button>
+            </form>
+          </>
+        )}
         <Button
           variant="raised"
           color="secondary"

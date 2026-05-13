@@ -5,6 +5,7 @@ import Login from "../components/Login";
 
 const searchSchema = z.object({
   message: z.string().optional(),
+  error: z.string().optional(),
 });
 
 export const Route = createFileRoute("/login")({
