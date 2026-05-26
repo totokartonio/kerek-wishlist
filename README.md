@@ -1,75 +1,145 @@
-# React + TypeScript + Vite
+# Kérek
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A collaborative wishlist app for sharing what you want with the people who want to give it to you.
 
-Currently, two official plugins are available:
+🌐 **Live:** [kerek-wishlist.netlify.app](https://kerek-wishlist.netlify.app)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## React Compiler
+- **Wishlists** — create, edit, and share wishlists with custom icons and visibility (private, public, or invite-only)
+- **Items** — add wishes with optional price, currency, link, and image
+- **Collaborators** — share via invite links with role-based access (owner / editor / viewer)
+- **Claim system** — collaborators can claim items as gifts, with optional "surprise mode" hiding claims from the wishlist owner
+- **Authentication** — email/password or Google OAuth, with anonymous mode for casual claimers
+- **Custom avatars** — choose from a set of playful animal icons
+- **Image uploads** — upload custom images for wishlist items
+- **Filtering & sorting** — by status, claim, archive, name, price, or date
+- **Mobile-friendly** — responsive layout with table/grid view toggle
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+## Tech Stack
 
-Note: This will impact Vite dev & build performances.
+**Frontend**
 
-## Expanding the ESLint configuration
+- React 19 + TypeScript + Vite
+- TanStack Router (file-based) + TanStack Query
+- Better Auth (client)
+- Cloudinary (image uploads)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+**Backend**
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Bun runtime
+- Hono (HTTP framework)
+- Better Auth (server)
+- Prisma ORM + PostgreSQL
+- Cloudinary (image management)
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+**Infra**
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- Frontend: Netlify
+- Backend: Railway
+- Database: Neon (Postgres)
+- Image CDN: Cloudinary
+
+## Project Structure
+
+```
+apps/
+  api/              Hono backend
+  web/              React frontend
+packages/
+  database/         Prisma schema and client
+  types/            Shared TypeScript types
+  icons/            Shared icon slug arrays
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Local Development
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Prerequisites
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- [Bun](https://bun.sh) (latest)
+- [Docker](https://www.docker.com) (for local Postgres)
+
+### Setup
+
+1. **Clone and install:**
+
+   ```sh
+   git clone <repo-url>
+   cd wishlist
+   bun install
+   ```
+
+2. **Start Postgres:**
+
+   ```sh
+   docker run -d \
+     --name wishlist-db \
+     -e POSTGRES_PASSWORD=wishlist \
+     -e POSTGRES_DB=wishlist \
+     -p 5432:5432 \
+     postgres:16
+   ```
+
+3. **Set up environment files:**
+
+   `apps/api/.env`:
+
+   ```
+   DATABASE_URL=postgresql://postgres:wishlist@localhost:5432/wishlist
+   BETTER_AUTH_SECRET=any-long-random-string
+   BETTER_AUTH_URL=http://localhost:3000
+   CLIENT_URL=http://localhost:5173
+   NODE_ENV=development
+   GOOGLE_CLIENT_ID=<your-google-oauth-client-id>
+   GOOGLE_CLIENT_SECRET=<your-google-oauth-client-secret>
+   CLOUDINARY_CLOUD_NAME=<your-cloudinary-cloud-name>
+   CLOUDINARY_API_KEY=<your-cloudinary-api-key>
+   CLOUDINARY_API_SECRET=<your-cloudinary-api-secret>
+   CLOUDINARY_UPLOAD_PRESET=wishlist-items
+   ```
+
+   `packages/database/.env`:
+
+   ```
+   DATABASE_URL=postgresql://postgres:wishlist@localhost:5432/wishlist
+   ```
+
+   `apps/web/.env.local`:
+
+   ```
+   VITE_API_URL=http://localhost:3000
+   VITE_APP_URL=http://localhost:5173
+   VITE_CLOUDINARY_CLOUD_NAME=<your-cloudinary-cloud-name>
+   VITE_CLOUDINARY_UPLOAD_PRESET=wishlist-items
+   ```
+
+4. **Run migrations:**
+
+   ```sh
+   cd packages/database
+   bun run prisma migrate dev
+   ```
+
+5. **Start the apps** (in separate terminals):
+
+   ```sh
+   # API (from apps/api)
+   bun run dev
+
+   # Web (from apps/web)
+   bun run dev
+   ```
+
+   Open http://localhost:5173
+
+## Scripts
+
+```sh
+bun run test         # Run all tests
+bun run lint         # Lint all packages
+bun run typecheck    # Type-check all packages
 ```
+
+## Credits
+
+Icons and illustrations by [Clay Bees](https://www.figma.com/community/file/1297572418007896814)
