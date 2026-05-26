@@ -3,7 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "bun run --hot src/index.ts"
+    "dev": "bun run --hot src/index.ts",
+    "start": "bunx prisma migrate deploy --schema=../../packages/database/prisma/schema.prisma && bun run src/index.ts"
   },
   "dependencies": {
     "@better-auth/prisma-adapter": "^1.6.2",
