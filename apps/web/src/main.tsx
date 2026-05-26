@@ -9,6 +9,7 @@ import { authClient } from "./lib/auth-client";
 import { routeTree } from "./routeTree.gen";
 import Spinner from "./components/ui/Spinner";
 import AppShell from "./components/AppShell";
+import "./lib/preloadImages";
 
 type RouterContext = {
   session: Awaited<ReturnType<typeof authClient.getSession>> | null;
