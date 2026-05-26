@@ -8,9 +8,10 @@
   "dependencies": {
     "@better-auth/prisma-adapter": "^1.6.2",
     "@wishlist/database": "workspace:*",
-    "@wishlist/types": "workspace:*",
     "@wishlist/icons": "workspace:*",
+    "@wishlist/types": "workspace:*",
     "better-auth": "^1.6.2",
+    "cloudinary": "^2.10.0",
     "hono": "^4.11.9"
   },
   "devDependencies": {

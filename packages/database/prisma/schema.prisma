@@ -92,7 +92,7 @@ model Item {
   currency  String?
   status    String   @default("want")
   link      String?
-  image     String   @default("Image")
+  image     String?
   wishlistId String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

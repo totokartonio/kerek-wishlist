@@ -56,7 +56,15 @@ const ItemsTable = ({
             >
               <td className={styles.previewCell}>
                 <div className={styles.previewWrapper}>
-                  <div className={styles.placeholder} />
+                  {item.image ? (
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className={styles.previewImg}
+                    />
+                  ) : (
+                    <div className={styles.placeholder} />
+                  )}
                 </div>
               </td>
               <td className={styles.nameCell}>{item.name}</td>

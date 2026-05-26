@@ -10,6 +10,7 @@ import { getWishlistWithRole } from "../lib/wishlistAccess";
 import { auth } from "../auth";
 import { deleteAnonymousUser } from "../lib/deleteAnonymousUser";
 import { filterItemsForRole } from "../lib/itemFiltering";
+import { deleteImage } from "../lib/cloudinary";
 
 const items = new Hono<{ Variables: AuthVariables }>();
 
@@ -141,7 +142,6 @@ items.post("/", async (c) => {
         currency: body.currency ?? null,
         status: body.status || "want",
         link: body.link || "",
-        image: body.image || "Image",
         wishlistId,
       },
     });
@@ -163,7 +163,7 @@ items.patch("/:id", async (c) => {
     const userId = session?.user.id ?? null;
     const wishlistId = c.req.param("wishlistId");
     const id = c.req.param("id");
-    const body = await c.req.json<UpdateItemDto>();
+    const body = await c.req.json<UpdateItemDto & { image?: string | null }>();
 
     if (!wishlistId) {
       return c.json({ error: "Wishlist ID is required" }, 400);
@@ -205,6 +205,10 @@ items.patch("/:id", async (c) => {
       existing.claimedByUserId !== null;
 
     const formerClaimerId = isForceUnclaim ? existing.claimedByUserId : null;
+
+    if ("image" in body && existing.image && body.image !== existing.image) {
+      await deleteImage(existing.image);
+    }
 
     const updated = await prisma.$transaction(async (tx) => {
       const updatedItem = await tx.item.update({
@@ -271,6 +275,10 @@ items.delete("/:id", async (c) => {
     }
 
     const formerClaimerId = existing.claimedByUserId;
+
+    if (existing.image) {
+      await deleteImage(existing.image);
+    }
 
     await prisma.$transaction(async (tx) => {
       await tx.item.delete({ where: { id } });

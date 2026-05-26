@@ -9,6 +9,7 @@ import { useArchiveItem } from "./useArchiveItem";
 import { useUnarchiveItem } from "./useUnarchiveItem";
 import { useSession, signIn } from "../../lib/auth-client";
 import { type ModalMode } from "@wishlist/types";
+import { uploadImage } from "../../api/cloudinary";
 
 type Props = {
   wishlistId: string;
@@ -19,19 +20,25 @@ export const useItemActions = ({ wishlistId, setModalMode }: Props) => {
   const [editingItemId, setEditingItemId] = useState<string | null>(null);
 
   const { data: session } = useSession();
-  const { mutate: createItem } = useCreateItem();
-  const { mutate: updateItem } = useUpdateItem();
+  const { mutateAsync: createItem } = useCreateItem();
+  const { mutate: updateItem, mutateAsync: updateItemAsync } = useUpdateItem();
   const { mutate: deleteItem } = useDeleteItem();
   const { mutate: claimItem } = useClaimItem();
   const { mutate: unclaimItem } = useUnclaimItem();
   const { mutate: archiveItem } = useArchiveItem();
   const { mutate: unarchiveItem } = useUnarchiveItem();
 
-  const handleAdd = (newItem: CreateItemDto) => {
-    createItem(
-      { wishlistId, dto: newItem },
-      { onSuccess: () => setModalMode(null) },
-    );
+  const handleAdd = async (newItem: CreateItemDto): Promise<string> => {
+    const created = await createItem({ wishlistId, dto: newItem });
+    return created.id;
+  };
+
+  const handleUploadImage = async (
+    itemId: string,
+    file: File,
+  ): Promise<void> => {
+    const imageUrl = await uploadImage(file);
+    await updateItemAsync({ wishlistId, id: itemId, dto: { image: imageUrl } });
   };
 
   const handleUpdateItem = (updatedItem: Item) => {
@@ -101,6 +108,7 @@ export const useItemActions = ({ wishlistId, setModalMode }: Props) => {
   return {
     editingItemId,
     handleAdd,
+    handleUploadImage,
     handleUpdateItem,
     handleDeleteItem,
     handleEditItem,

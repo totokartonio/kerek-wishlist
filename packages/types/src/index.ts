@@ -20,7 +20,7 @@ export type Currency = (typeof CURRENCIES)[number];
 
 export type Item = {
   id: string;
-  image: string;
+  image: string | null;
   name: string;
   price: number;
   currency: Currency | null;
@@ -33,9 +33,13 @@ export type Item = {
 
 export type CreateItemDto = Omit<
   Item,
-  "id" | "archived" | "claimedByUserId" | "createdAt"
+  "id" | "archived" | "claimedByUserId" | "createdAt" | "image"
 >;
-export type UpdateItemDto = Partial<CreateItemDto>;
+export type UpdateItemDto = Partial<CreateItemDto> & { image?: string | null };
+
+export type UpdateItemImageDto = {
+  image: string | null;
+};
 
 export const WISHLIST_VISIBILITY = ["private", "public", "invite"] as const;
 export type WishlistVisibility = (typeof WISHLIST_VISIBILITY)[number];

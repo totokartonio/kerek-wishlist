@@ -41,7 +41,15 @@ const ItemsGrid = ({
           key={item.id}
           className={`${styles.card} ${item.archived ? styles.archived : ""}`}
         >
-          <div className={styles.placeholder} />
+          {item.image ? (
+            <img
+              src={item.image}
+              alt={item.name}
+              className={styles.previewImg}
+            />
+          ) : (
+            <div className={styles.placeholder} />
+          )}
           <div className={styles.content}>
             <div className={styles.row}>
               <strong className={styles.name}>{item.name}</strong>

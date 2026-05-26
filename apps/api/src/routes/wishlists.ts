@@ -11,6 +11,7 @@ import { getWishlistWithRole } from "../lib/wishlistAccess";
 import { auth } from "../auth";
 import { deleteAnonymousUser } from "../lib/deleteAnonymousUser";
 import { WISHLIST_ICONS } from "@wishlist/icons";
+import { deleteImage } from "../lib/cloudinary";
 
 const wishlists = new Hono<{ Variables: AuthVariables }>();
 
@@ -209,6 +210,18 @@ wishlists.delete("/:wishlistId", async (c) => {
     );
     if (!wishlist) return c.json({ error: "Wishlist not found" }, 404);
     if (role !== "owner") return c.json({ error: "Forbidden" }, 403);
+
+    const itemsWithImages = await prisma.item.findMany({
+      where: { wishlistId, image: { not: null } },
+      select: { image: true },
+    });
+
+    await Promise.all(
+      itemsWithImages
+        .map((i) => i.image)
+        .filter((img): img is string => img !== null)
+        .map(deleteImage),
+    );
 
     await prisma.$transaction(async (tx) => {
       // Collect claimers before cascade delete so we can clean up anonymous ones
