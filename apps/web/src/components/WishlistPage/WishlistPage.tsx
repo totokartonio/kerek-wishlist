@@ -64,6 +64,7 @@ const WishlistPage = ({ wishlistId }: Props) => {
   const {
     editingItemId,
     handleAdd,
+    handleUploadImage,
     handleUpdateItem,
     handleDeleteItem,
     handleEditItem,
@@ -261,6 +262,7 @@ const WishlistPage = ({ wishlistId }: Props) => {
         <ItemModal
           mode="add"
           onAdd={handleAdd}
+          onUploadImage={handleUploadImage}
           onClose={() => setModalMode(null)}
         />
       )}

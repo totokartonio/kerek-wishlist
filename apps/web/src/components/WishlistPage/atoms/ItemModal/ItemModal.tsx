@@ -1,11 +1,12 @@
 import styles from "./ItemModal.module.css";
-import { useState, type SubmitEventHandler } from "react";
+import { useState, useRef, type SubmitEventHandler } from "react";
 import { CURRENCIES, type CreateItemDto } from "@wishlist/types";
 import type { Currency, Item } from "@wishlist/types";
 import Modal from "../../../ui/Modal";
 import { Button } from "../../../ui/Button/Button";
 import Select from "../../../ui/Select";
 import Input from "../../../ui/Input";
+import { uploadImage } from "../../../../api/cloudinary";
 
 type FormData = {
   name: string;
@@ -14,12 +15,19 @@ type FormData = {
   link: string;
 };
 
+type ImageState =
+  | { type: "existing"; url: string }
+  | { type: "new"; file: File; preview: string }
+  | { type: "removed" }
+  | { type: "none" };
+
 type Props = {
   onClose: () => void;
 } & (
   | {
       mode: "add";
-      onAdd: (item: CreateItemDto) => void;
+      onAdd: (item: CreateItemDto) => Promise<string>;
+      onUploadImage: (itemId: string, file: File) => Promise<void>;
       item?: never;
       onUpdate?: never;
       canEdit?: never;
@@ -36,6 +44,7 @@ type Props = {
       onArchive: () => void;
       onUnarchive: () => void;
       onAdd?: never;
+      onUploadImage?: never;
     }
 );
 
@@ -51,6 +60,7 @@ const ItemModal = ({
   item,
   canEdit,
   onAdd,
+  onUploadImage,
   onUpdate,
   onClose,
   onResetClaim,
@@ -67,46 +77,108 @@ const ItemModal = ({
         }
       : defaultFormData,
   );
+  const [imageState, setImageState] = useState<ImageState>(
+    mode === "edit" && item.image
+      ? { type: "existing", url: item.image }
+      : { type: "none" },
+  );
+  const [imageError, setImageError] = useState<string | null>(null);
   const [error, setError] = useState<boolean>(false);
+  const [uploading, setUploading] = useState<boolean>(false);
   const [confirmingReset, setConfirmingReset] = useState<boolean>(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const isEditing = mode === "edit";
   const title = isEditing ? "Edit Wish" : "New Wish";
   const buttonText = isEditing ? "Save Changes" : "Add Wish";
 
-  const handleSubmit: SubmitEventHandler<HTMLFormElement> = (event) => {
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+    if (!allowedTypes.includes(file.type)) {
+      setImageError("Only JPEG, PNG and WebP images are allowed");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setImageError("Image must be under 5MB");
+      return;
+    }
+    setImageError(null);
+
+    const preview = URL.createObjectURL(file);
+    setImageState({ type: "new", file, preview });
+  };
+
+  const handleRemoveImage = () => {
+    if (imageState.type === "new") {
+      URL.revokeObjectURL(imageState.preview);
+    }
+    setImageState({ type: "removed" });
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const handleSubmit: SubmitEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
     if (!formData.name) {
       setError(true);
       return;
     }
 
-    if (isEditing && item) {
-      const updatedItem: Item = {
-        ...item,
+    setUploading(true);
+
+    try {
+      if (isEditing && item) {
+        let imageUrl: string | null = item.image;
+
+        if (imageState.type === "new") {
+          imageUrl = await uploadImage(imageState.file);
+        } else if (imageState.type === "removed") {
+          imageUrl = null;
+        } else if (imageState.type === "existing") {
+          imageUrl = imageState.url;
+        }
+
+        const updatedItem: Item = {
+          ...item,
+          ...formData,
+          price: formData.price === "" ? 0 : Number(formData.price),
+          image: imageUrl,
+        };
+
+        onUpdate(updatedItem);
+        onClose();
+        return;
+      }
+
+      const newItem: CreateItemDto = {
+        status: "want",
         ...formData,
         price: formData.price === "" ? 0 : Number(formData.price),
       };
 
-      onUpdate(updatedItem);
+      const itemId = await onAdd(newItem);
 
+      if (imageState.type === "new" && onUploadImage) {
+        await onUploadImage(itemId, imageState.file);
+      }
+
+      setFormData(defaultFormData);
+      setImageState({ type: "none" });
       onClose();
-
-      return;
+    } finally {
+      setUploading(false);
     }
-
-    const newItem: CreateItemDto = {
-      image: "Image",
-      status: "want",
-      ...formData,
-      price: formData.price === "" ? 0 : Number(formData.price),
-    };
-
-    onAdd(newItem);
-
-    setFormData(defaultFormData);
-    onClose();
   };
+
+  const previewUrl =
+    imageState.type === "existing"
+      ? imageState.url
+      : imageState.type === "new"
+        ? imageState.preview
+        : null;
+
   return (
     <Modal onClose={onClose}>
       <form onSubmit={handleSubmit} className={styles.form} noValidate>
@@ -120,6 +192,48 @@ const ItemModal = ({
             Please fill all fields
           </div>
         )}
+        <div className={styles.imageSection}>
+          <div
+            className={styles.imagePreview}
+            onClick={() => fileInputRef.current?.click()}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) =>
+              e.key === "Enter" && fileInputRef.current?.click()
+            }
+            aria-label="Upload image"
+          >
+            {previewUrl ? (
+              <img
+                src={previewUrl ?? ""}
+                alt="Item preview"
+                className={styles.previewImg}
+              />
+            ) : (
+              <div className={styles.imagePlaceholder} />
+            )}
+          </div>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            onChange={handleFileChange}
+            className={styles.hiddenInput}
+            aria-label="Image file input"
+          />
+          {(imageState.type === "existing" || imageState.type === "new") && (
+            <Button
+              variant="ghost"
+              color="secondary"
+              type="button"
+              onClick={handleRemoveImage}
+              className={styles.removeImageButton}
+            >
+              Remove image
+            </Button>
+          )}
+        </div>
+        {imageError && <p className={styles.imageError}>{imageError}</p>}
         <Input
           label="Name:"
           type="text"
@@ -247,8 +361,9 @@ const ItemModal = ({
                 color="primary"
                 type="submit"
                 data-testid="add-item-modal-submit-button"
+                disabled={uploading}
               >
-                {buttonText}
+                {uploading ? "Saving..." : buttonText}
               </Button>
             </div>
           </div>
